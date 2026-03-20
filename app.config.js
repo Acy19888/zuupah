@@ -41,6 +41,14 @@ module.exports = {
     },
     plugins: [
       "expo-dev-client",
+      [
+        "expo-build-properties",
+        {
+          android: {
+            kotlinVersion: "2.0.21",
+          },
+        },
+      ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       [
