@@ -7,14 +7,17 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
+// NOTE: With @react-native-firebase, the native config files handle
+// initialization automatically (GoogleService-Info.plist on iOS,
+// google-services.json on Android). This object is kept for reference
+// and used in isFirebaseConfigured() checks.
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  apiKey: 'AIzaSyD5Y028zKVA6kBKl-SQsFgdRqIKtYGCGSk',
+  authDomain: 'zuupah-77bbc.firebaseapp.com',
+  projectId: 'zuupah-77bbc',
+  storageBucket: 'zuupah-77bbc.firebasestorage.app',
+  messagingSenderId: '263118521985',
+  appId: '1:263118521985:ios:ff59c06a2ebea0aa902f80',
 };
 
 /**
