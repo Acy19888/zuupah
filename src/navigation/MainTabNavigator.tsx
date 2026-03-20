@@ -7,7 +7,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import StoreScreen from '@screens/store/StoreScreen';
 import BookDetailScreen from '@screens/store/BookDetailScreen';
 import LibraryScreen from '@screens/library/LibraryScreen';

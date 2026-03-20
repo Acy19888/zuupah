@@ -1,16 +1,11 @@
 /**
- * Firebase Configuration and Initialization
+ * Firebase Configuration — Firebase JS SDK (Expo Go compatible)
  */
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-import { initializeApp, getApp, getApps } from '@react-native-firebase/app';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-
-// NOTE: With @react-native-firebase, the native config files handle
-// initialization automatically (GoogleService-Info.plist on iOS,
-// google-services.json on Android). This object is kept for reference
-// and used in isFirebaseConfigured() checks.
 const firebaseConfig = {
   apiKey: 'AIzaSyD5Y028zKVA6kBKl-SQsFgdRqIKtYGCGSk',
   authDomain: 'zuupah-77bbc.firebaseapp.com',
@@ -20,67 +15,18 @@ const firebaseConfig = {
   appId: '1:263118521985:ios:ff59c06a2ebea0aa902f80',
 };
 
-/**
- * Initialize Firebase app if not already initialized
- */
-export const initializeFirebase = (): void => {
-  if (getApps().length === 0) {
-    initializeApp(firebaseConfig);
-  }
-};
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-/**
- * Get Firebase Authentication instance
- */
-export const getFirebaseAuth = (): FirebaseAuthTypes.Module => {
-  return auth();
-};
+export const firebaseAuth = getAuth(app);
+export const firebaseDb = getFirestore(app);
+export const firebaseStorage = getStorage(app);
 
-/**
- * Get Firestore Database instance
- */
-export const getFirebaseFirestore = (): any => {
-  return firestore();
-};
+export const getFirebaseAuth = () => firebaseAuth;
+export const getFirebaseFirestore = () => firebaseDb;
+export const getFirebaseStorage = () => firebaseStorage;
+export const getCurrentUser = () => firebaseAuth.currentUser;
+export const signOutFirebase = () => firebaseAuth.signOut();
+export const isFirebaseConfigured = () => true;
+export const initializeFirebase = () => app;
 
-/**
- * Get Firebase Storage instance
- */
-export const getFirebaseStorage = (): any => {
-  return storage();
-};
-
-/**
- * Check if Firebase is properly configured
- */
-export const isFirebaseConfigured = (): boolean => {
-  return !!(
-    firebaseConfig.apiKey &&
-    firebaseConfig.authDomain &&
-    firebaseConfig.projectId
-  );
-};
-
-/**
- * Get current Firebase user
- */
-export const getCurrentUser = (): FirebaseAuthTypes.User | null => {
-  return auth().currentUser;
-};
-
-/**
- * Sign out from Firebase
- */
-export const signOutFirebase = async (): Promise<void> => {
-  await auth().signOut();
-};
-
-export default {
-  initializeFirebase,
-  getFirebaseAuth,
-  getFirebaseFirestore,
-  getFirebaseStorage,
-  isFirebaseConfigured,
-  getCurrentUser,
-  signOutFirebase,
-};
+export default { getFirebaseAuth, getFirebaseFirestore, getFirebaseStorage, getCurrentUser, signOutFirebase, isFirebaseConfigured, initializeFirebase };

@@ -7,60 +7,19 @@ module.exports = {
     icon: "./src/assets/images/icon.png",
     scheme: "zuupah",
     userInterfaceStyle: "light",
-    newArchEnabled: false,
     splash: {
       backgroundColor: "#38b6c9",
     },
     ios: {
       bundleIdentifier: "com.zuupah.app",
       supportsTablet: false,
-      infoPlist: {
-        NSBluetoothAlwaysUsageDescription:
-          "Zuupah needs Bluetooth to connect to your Zuupah Pen.",
-        NSBluetoothPeripheralUsageDescription:
-          "Zuupah needs Bluetooth to connect to your Zuupah Pen.",
-        NSLocationWhenInUseUsageDescription:
-          "Zuupah needs location access to scan for Bluetooth devices.",
-      },
     },
     android: {
       package: "com.zuupah.zuupah",
       adaptiveIcon: {
         backgroundColor: "#38b6c9",
       },
-      permissions: [
-        "android.permission.BLUETOOTH",
-        "android.permission.BLUETOOTH_ADMIN",
-        "android.permission.BLUETOOTH_SCAN",
-        "android.permission.BLUETOOTH_CONNECT",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.INTERNET",
-      ],
-      googleServicesFile: "./google-services.json",
     },
-    plugins: [
-      "expo-dev-client",
-      [
-        "expo-build-properties",
-        {
-          android: {
-            kotlinVersion: "2.0.21",
-          },
-        },
-      ],
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth",
-      [
-        "react-native-ble-plx",
-        {
-          isBackgroundEnabled: false,
-          modes: ["peripheral", "central"],
-          bluetoothAlwaysPermission:
-            "Allow Zuupah to connect to your Zuupah Pen via Bluetooth.",
-        },
-      ],
-    ],
     extra: {
       eas: {
         projectId: "78b04c82-4741-4b17-9ecd-a085efc011b6",

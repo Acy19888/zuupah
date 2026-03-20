@@ -12,7 +12,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
 import Card from '@components/common/Card';
 import Button from '@components/common/Button';
