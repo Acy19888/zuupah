@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.jest-cache/
+
+# Production
+build/
+dist/
+
+# React Native
+.watchmanconfig
+.buckconfig.local
+.gradle/
+local.properties
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+/android/app/debug.keystore
+/ios/Pods/
+/ios/Podfile.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+android/app/build/
+ios/build/
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
+# Misc
+*.log
+.turbo/
