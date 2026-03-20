@@ -13,15 +13,23 @@ import { TYPOGRAPHY } from '@constants/typography';
 
 const EditProfileScreen: React.FC<any> = ({ navigation }) => {
   const { user, handleUpdateProfile, isLoading } = useAuth();
-  const [displayName, setDisplayName] = useState(user?.displayName ?? '');
+  const [firstName, setFirstName] = useState(user?.firstName ?? '');
+  const [lastName,  setLastName]  = useState(user?.lastName  ?? '');
+  const [childName, setChildName] = useState(user?.childName ?? '');
   const [saved, setSaved] = useState(false);
 
+  const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || (user?.displayName?.charAt(0).toUpperCase() ?? 'U');
+
   const handleSave = async () => {
-    if (!displayName.trim()) {
-      Alert.alert('Error', 'Name cannot be empty.');
+    if (!firstName.trim() || !lastName.trim()) {
+      Alert.alert('Error', 'First name and last name cannot be empty.');
       return;
     }
-    await handleUpdateProfile({ displayName: displayName.trim() });
+    await handleUpdateProfile({
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      childName: childName.trim() || undefined,
+    });
     setSaved(true);
     setTimeout(() => {
       navigation.goBack();
@@ -42,25 +50,53 @@ const EditProfileScreen: React.FC<any> = ({ navigation }) => {
         {/* Avatar */}
         <View style={styles.avatarSection}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {(displayName || user?.displayName || 'U').charAt(0).toUpperCase()}
-            </Text>
+            <Text style={styles.avatarText}>{initials}</Text>
           </View>
           <Text style={styles.avatarHint}>Tap to change photo (coming soon)</Text>
         </View>
 
         {/* Form */}
         <View style={styles.form}>
+          {/* First + Last name row */}
+          <View style={styles.rowGroup}>
+            <View style={[styles.inputGroup, { flex: 1 }]}>
+              <Text style={styles.label}>First Name</Text>
+              <TextInput
+                style={styles.input}
+                value={firstName}
+                onChangeText={setFirstName}
+                placeholder="John"
+                placeholderTextColor={COLORS.placeholderText}
+                editable={!isLoading}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={[styles.inputGroup, { flex: 1 }]}>
+              <Text style={styles.label}>Last Name</Text>
+              <TextInput
+                style={styles.input}
+                value={lastName}
+                onChangeText={setLastName}
+                placeholder="Doe"
+                placeholderTextColor={COLORS.placeholderText}
+                editable={!isLoading}
+                autoCapitalize="words"
+              />
+            </View>
+          </View>
+
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Display Name</Text>
+            <Text style={styles.label}>Child's Name <Text style={styles.optional}>(optional)</Text></Text>
             <TextInput
               style={styles.input}
-              value={displayName}
-              onChangeText={setDisplayName}
-              placeholder="Your name"
+              value={childName}
+              onChangeText={setChildName}
+              placeholder="Emma"
               placeholderTextColor={COLORS.placeholderText}
               editable={!isLoading}
+              autoCapitalize="words"
             />
+            <Text style={styles.hint}>Shown in greetings and the learning pen</Text>
           </View>
 
           <View style={styles.inputGroup}>
@@ -84,7 +120,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation }) => {
           title={isLoading ? 'Saving…' : 'Save Changes'}
           onPress={handleSave}
           isLoading={isLoading}
-          disabled={isLoading || !displayName.trim()}
+          disabled={isLoading || !firstName.trim() || !lastName.trim()}
           fullWidth
           size="large"
           style={styles.saveBtn}
@@ -97,7 +133,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   content: { paddingHorizontal: 20, paddingVertical: 24 },
-  header: { marginBottom: 32 },
+  header: { marginBottom: 28 },
   backBtn: { marginBottom: 12 },
   backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontWeight: '600' as const },
   title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const, color: COLORS.darkText },
@@ -107,11 +143,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.beachBlue,
     justifyContent: 'center', alignItems: 'center', marginBottom: 8,
   },
-  avatarText: { fontSize: 38, fontWeight: '700' as const, color: COLORS.white },
+  avatarText: { fontSize: 32, fontWeight: '700' as const, color: COLORS.white },
   avatarHint: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText },
   form: { gap: 20 },
+  rowGroup: { flexDirection: 'row', gap: 12 },
   inputGroup: { gap: 8 },
   label: { fontSize: TYPOGRAPHY.fontSize.sm, fontWeight: '600' as const, color: COLORS.darkText },
+  optional: { fontWeight: '400' as const, color: COLORS.lightText },
   input: {
     borderWidth: 1, borderColor: COLORS.border, borderRadius: 10,
     paddingHorizontal: 14, paddingVertical: 13,

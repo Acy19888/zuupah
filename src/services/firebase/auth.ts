@@ -21,10 +21,14 @@ export const signUp = async (data: SignUpData): Promise<User> => {
   if (!data.email || !data.password || data.password.length < 6) {
     throw new Error('Please enter a valid email and a password with at least 6 characters.');
   }
+  const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || data.displayName || data.email.split('@')[0];
   const user: User = {
     uid: `mock-${Date.now()}`,
     email: data.email,
-    displayName: data.displayName || data.email.split('@')[0],
+    displayName: fullName,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    childName: data.childName,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     isEmailVerified: false,
@@ -69,12 +73,24 @@ export const confirmPasswordReset = async (_payload: PasswordResetPayload): Prom
   console.log('[MockAuth] Password reset confirmed');
 };
 
-export const updateUserProfile = async (updates: { displayName?: string; photoURL?: string }): Promise<void> => {
+export const updateUserProfile = async (updates: {
+  displayName?: string;
+  photoURL?: string;
+  firstName?: string;
+  lastName?: string;
+  childName?: string;
+}): Promise<void> => {
   await delay(400);
   if (_currentUser) {
+    const fullName = updates.firstName || updates.lastName
+      ? [updates.firstName ?? _currentUser.firstName, updates.lastName ?? _currentUser.lastName].filter(Boolean).join(' ')
+      : (updates.displayName ?? _currentUser.displayName);
     _currentUser = {
       ..._currentUser,
-      displayName: updates.displayName ?? _currentUser.displayName,
+      displayName: fullName,
+      firstName: updates.firstName ?? _currentUser.firstName,
+      lastName: updates.lastName ?? _currentUser.lastName,
+      childName: updates.childName ?? _currentUser.childName,
       photoUrl: updates.photoURL ?? _currentUser.photoUrl,
       updatedAt: new Date().toISOString(),
     };

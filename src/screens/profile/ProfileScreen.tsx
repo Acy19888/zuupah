@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
+import { useThemeStore, getThemeColors } from '@store/themeStore';
 import Card from '@components/common/Card';
 import Button from '@components/common/Button';
 import { COLORS } from '@constants/colors';
@@ -25,6 +26,8 @@ import { TYPOGRAPHY } from '@constants/typography';
  */
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const { user, handleSignOut } = useAuth();
+  const { theme } = useThemeStore();
+  const tc = getThemeColors(theme);
 
   const handleLogout = async () => {
     try {
@@ -34,27 +37,39 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     }
   };
 
+  const fullName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(' ') || user.displayName
+    : '';
+  const initials = user
+    ? (user.firstName?.charAt(0) ?? '') + (user.lastName?.charAt(0) ?? '')
+      || user.displayName?.charAt(0).toUpperCase()
+      || 'U'
+    : 'U';
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: tc.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Text style={styles.title}>Profile</Text>
+          <Text style={[styles.title, { color: tc.text }]}>Profile</Text>
         </View>
 
         {user && (
           <View style={styles.content}>
-            <Card style={styles.profileCard}>
+            <Card style={[styles.profileCard, { backgroundColor: tc.card }]}>
               <View style={styles.avatarContainer}>
                 <View style={styles.avatar}>
                   <Text style={styles.avatarText}>
-                    {user.displayName?.charAt(0).toUpperCase() || 'U'}
+                    {initials.toUpperCase()}
                   </Text>
                 </View>
               </View>
 
               <View style={styles.profileInfo}>
-                <Text style={styles.displayName}>{user.displayName}</Text>
-                <Text style={styles.email}>{user.email}</Text>
+                <Text style={[styles.displayName, { color: tc.text }]}>{fullName}</Text>
+                {user.childName ? (
+                  <Text style={[styles.childName, { color: COLORS.beachBlue }]}>👶 {user.childName}</Text>
+                ) : null}
+                <Text style={[styles.email, { color: tc.textSecondary }]}>{user.email}</Text>
                 {!user.isEmailVerified && (
                   <View style={styles.verificationBadge}>
                     <Text style={styles.verificationText}>
@@ -102,7 +117,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Preferences</Text>
 
-              <TouchableOpacity style={styles.settingItem}>
+              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Notifications')}>
                 <View style={styles.settingContent}>
                   <Icon
                     name="bell"
@@ -264,6 +279,11 @@ const styles = StyleSheet.create({
   email: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.lightText,
+  },
+  childName: {
+    fontSize: TYPOGRAPHY.fontSize.sm,
+    fontWeight: '600' as const,
+    marginBottom: 2,
   },
   verificationBadge: {
     marginTop: 8,

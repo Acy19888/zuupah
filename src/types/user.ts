@@ -6,6 +6,9 @@ export interface User {
   uid: string;
   email: string;
   displayName: string;
+  firstName?: string;
+  lastName?: string;
+  childName?: string;
   photoUrl?: string;
   phoneNumber?: string;
   createdAt: string;
@@ -76,6 +79,9 @@ export interface SignUpData {
   email: string;
   password: string;
   displayName: string;
+  firstName?: string;
+  lastName?: string;
+  childName?: string;
   acceptTerms: boolean;
   acceptPrivacy: boolean;
 }

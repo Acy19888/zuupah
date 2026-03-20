@@ -25,9 +25,9 @@ export const useAuth = () => {
   } = useAuthStore();
 
   const handleSignUp = useCallback(
-    async (email: string, password: string, displayName: string) => {
+    async (email: string, password: string, displayName: string, firstName?: string, lastName?: string, childName?: string) => {
       try {
-        await signUp(email, password, displayName);
+        await signUp(email, password, displayName, firstName, lastName, childName);
       } catch (err) {
         console.error('Sign up failed:', err);
       }
@@ -77,7 +77,7 @@ export const useAuth = () => {
   );
 
   const handleUpdateProfile = useCallback(
-    async (updates: { displayName?: string; photoURL?: string }) => {
+    async (updates: { displayName?: string; photoURL?: string; firstName?: string; lastName?: string; childName?: string }) => {
       try {
         await updateProfile(updates);
       } catch (err) {

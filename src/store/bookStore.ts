@@ -17,6 +17,10 @@ interface BookStore {
   error: string | null;
   searchQuery: string;
   selectedCategory: string | null;
+  /** bookId → star rating (1–5) submitted by user */
+  ratedBooks: Record<string, number>;
+  /** bookIds that have been transferred to pen / used */
+  usedBooks: string[];
 
   // Actions
   fetchBooks: (limit?: number) => Promise<void>;
@@ -36,6 +40,8 @@ interface BookStore {
   pauseDownload: (bookId: string) => void;
   cancelDownload: (bookId: string) => void;
   getLibraryBooks: () => BookLibraryItem[];
+  rateBook: (bookId: string, stars: number) => void;
+  markBookAsUsed: (bookId: string) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
   reset: () => void;
@@ -50,6 +56,8 @@ export const useBookStore = create<BookStore>((set, get) => ({
   error: null,
   searchQuery: '',
   selectedCategory: null,
+  ratedBooks: {},
+  usedBooks: [],
 
   fetchBooks: async (limit = 20) => {
     set({ isLoading: true, error: null });
@@ -263,6 +271,20 @@ export const useBookStore = create<BookStore>((set, get) => ({
     return get().libraryBooks;
   },
 
+  rateBook: (bookId: string, stars: number) => {
+    set(state => ({
+      ratedBooks: { ...state.ratedBooks, [bookId]: stars },
+    }));
+  },
+
+  markBookAsUsed: (bookId: string) => {
+    set(state => ({
+      usedBooks: state.usedBooks.includes(bookId)
+        ? state.usedBooks
+        : [...state.usedBooks, bookId],
+    }));
+  },
+
   setError: (error: string | null) => {
     set({ error });
   },
@@ -281,6 +303,8 @@ export const useBookStore = create<BookStore>((set, get) => ({
       error: null,
       searchQuery: '',
       selectedCategory: null,
+      ratedBooks: {},
+      usedBooks: [],
     });
   },
 }));

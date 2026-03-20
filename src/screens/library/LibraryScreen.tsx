@@ -17,25 +17,19 @@ import LoadingSpinner from '@components/common/LoadingSpinner';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
-/**
- * LibraryScreen Component
- * Displays user's downloaded books and library management
- */
 const LibraryScreen: React.FC<any> = ({ navigation }) => {
   const { libraryBooks, isLoading, handleRemoveFromLibrary } = useBooks();
 
   const handleBookPress = (bookId: string) => {
-    navigation.navigate('Store', {
-      screen: 'BookDetail',
-      params: { bookId },
-    });
+    // Navigate within the LibraryStack so we get rating UI, not download
+    navigation.navigate('LibraryBookDetail', { bookId, fromLibrary: true });
   };
 
   const renderBookCard = ({ item }: any) => (
     <BookCard
       book={item}
       onPress={handleBookPress}
-      isDownloaded={item.isDownloaded}
+      isDownloaded={true}
       onRemove={handleRemoveFromLibrary}
       compact={false}
     />
@@ -78,52 +72,25 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingHorizontal: 16, paddingVertical: 16,
+    borderBottomWidth: 1, borderBottomColor: COLORS.border,
   },
-  title: {
-    fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: '700' as const,
-    color: COLORS.darkText,
-  },
-  subtitle: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.lightText,
-    marginTop: 4,
-  },
-  listContent: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const, color: COLORS.darkText },
+  subtitle: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, marginTop: 4 },
+  listContent: { paddingHorizontal: 12, paddingVertical: 12 },
   emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+    flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32,
   },
-  emptyIcon: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
+  emptyIcon: { fontSize: 64, marginBottom: 16 },
   emptyTitle: {
-    fontSize: TYPOGRAPHY.fontSize.xl,
-    fontWeight: '600' as const,
-    color: COLORS.darkText,
-    textAlign: 'center',
-    marginBottom: 8,
+    fontSize: TYPOGRAPHY.fontSize.xl, fontWeight: '600' as const,
+    color: COLORS.darkText, textAlign: 'center', marginBottom: 8,
   },
   emptyText: {
-    fontSize: TYPOGRAPHY.fontSize.base,
-    color: COLORS.lightText,
-    textAlign: 'center',
-    lineHeight: 20,
+    fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.lightText,
+    textAlign: 'center', lineHeight: 20,
   },
 });
 

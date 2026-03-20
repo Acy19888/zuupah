@@ -9,12 +9,12 @@ import * as authService from '@services/firebase/auth';
 
 interface AuthStore extends AuthState {
   // Actions
-  signUp: (email: string, password: string, displayName: string) => Promise<void>;
+  signUp: (email: string, password: string, displayName: string, firstName?: string, lastName?: string, childName?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
-  updateProfile: (updates: { displayName?: string; photoURL?: string }) => Promise<void>;
+  updateProfile: (updates: { displayName?: string; photoURL?: string; firstName?: string; lastName?: string; childName?: string }) => Promise<void>;
   sendEmailVerification: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
   setError: (error: string | null) => void;
@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   error: null,
   lastAuthTime: undefined,
 
-  signUp: async (email: string, password: string, displayName: string) => {
+  signUp: async (email: string, password: string, displayName: string, firstName?: string, lastName?: string, childName?: string) => {
     set({ isLoading: true, error: null });
 
     try {
@@ -36,6 +36,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         email,
         password,
         displayName,
+        firstName,
+        lastName,
+        childName,
         acceptTerms: true,
         acceptPrivacy: true,
       });
