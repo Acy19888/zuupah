@@ -24,7 +24,7 @@ module.exports = {
       },
     },
     android: {
-      package: "com.zuupah.app",
+      package: "com.zuupah.zuupah",
       adaptiveIcon: {
         backgroundColor: "#38b6c9",
       },
@@ -37,12 +37,21 @@ module.exports = {
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.INTERNET",
       ],
-      googleServicesFile: "./android/app/google-services.json",
+      googleServicesFile: "./google-services.json",
     },
     plugins: [
       "expo-dev-client",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      [
+        "react-native-ble-plx",
+        {
+          isBackgroundEnabled: false,
+          modes: ["peripheral", "central"],
+          bluetoothAlwaysPermission:
+            "Allow Zuupah to connect to your Zuupah Pen via Bluetooth.",
+        },
+      ],
     ],
     extra: {
       eas: {

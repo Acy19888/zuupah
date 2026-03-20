@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "263118521985",
+    "project_id": "zuupah-77bbc",
+    "storage_bucket": "zuupah-77bbc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263118521985:android:0205ef7c32069dcd902f80",
+        "android_client_info": {
+          "package_name": "com.zuupah.zuupah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263118521985-4lck5sf6i26p3icq9hvoq16jrbdoif7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgj8v0-VZgGulgKgkKj9fHt7epzW0aZEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263118521985-4lck5sf6i26p3icq9hvoq16jrbdoif7b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "263118521985-2jam9p7leus125osjkvts71b7eg7jsea.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zuupah.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
