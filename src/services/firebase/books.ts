@@ -1,44 +1,72 @@
 /**
  * Firebase Books Service — Firebase JS SDK (Expo Go compatible)
+ * Falls back to mock zoo books when Firestore is empty or unavailable.
  */
 import { collection, getDocs, query, where, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import { firebaseDb } from './config';
 import { Book, BookFilter, BookSearchResult } from '@types/book';
+import { MOCK_ZOO_BOOKS, getMockBookById } from './mockBooksData';
 
 const BOOKS = 'books';
 
 const snap = (d: any): Book => ({ id: d.id, ...d.data() } as Book);
 
-export const getAllBooks = async (lim = 20): Promise<Book[]> => {
-  const q = query(collection(firebaseDb, BOOKS), limit(lim));
-  const snap2 = await getDocs(q);
-  return snap2.docs.map(snap);
+// Try Firestore; if empty or error, return mock books instead
+const withMockFallback = async (firestoreCall: () => Promise<Book[]>): Promise<Book[]> => {
+  try {
+    const books = await firestoreCall();
+    return books.length > 0 ? books : MOCK_ZOO_BOOKS;
+  } catch {
+    return MOCK_ZOO_BOOKS;
+  }
 };
 
-export const getBooksByCategory = async (category: string, lim = 20): Promise<Book[]> => {
-  const q = query(collection(firebaseDb, BOOKS), where('category', '==', category), limit(lim));
-  return (await getDocs(q)).docs.map(snap);
-};
+export const getAllBooks = async (lim = 20): Promise<Book[]> =>
+  withMockFallback(async () => {
+    const q = query(collection(firebaseDb, BOOKS), limit(lim));
+    return (await getDocs(q)).docs.map(snap);
+  });
 
-export const getFreeBooks = async (lim = 20): Promise<Book[]> => {
-  const q = query(collection(firebaseDb, BOOKS), where('isFree', '==', true), limit(lim));
-  return (await getDocs(q)).docs.map(snap);
-};
+export const getBooksByCategory = async (category: string, lim = 20): Promise<Book[]> =>
+  withMockFallback(async () => {
+    const q = query(collection(firebaseDb, BOOKS), where('category', '==', category), limit(lim));
+    return (await getDocs(q)).docs.map(snap);
+  });
 
-export const getTrendingBooks = async (lim = 10): Promise<Book[]> => {
-  const q = query(collection(firebaseDb, BOOKS), orderBy('rating', 'desc'), limit(lim));
-  return (await getDocs(q)).docs.map(snap);
-};
+export const getFreeBooks = async (lim = 20): Promise<Book[]> =>
+  withMockFallback(async () => {
+    const q = query(collection(firebaseDb, BOOKS), where('isFree', '==', true), limit(lim));
+    return (await getDocs(q)).docs.map(snap);
+  });
 
-export const getNewBooks = async (lim = 10): Promise<Book[]> => {
-  const q = query(collection(firebaseDb, BOOKS), orderBy('createdAt', 'desc'), limit(lim));
-  return (await getDocs(q)).docs.map(snap);
-};
+export const getTrendingBooks = async (lim = 10): Promise<Book[]> =>
+  withMockFallback(async () => {
+    const q = query(collection(firebaseDb, BOOKS), orderBy('rating', 'desc'), limit(lim));
+    return (await getDocs(q)).docs.map(snap);
+  });
+
+export const getNewBooks = async (lim = 10): Promise<Book[]> =>
+  withMockFallback(async () => {
+    const q = query(collection(firebaseDb, BOOKS), orderBy('createdAt', 'desc'), limit(lim));
+    return (await getDocs(q)).docs.map(snap);
+  });
 
 export const getBookById = async (bookId: string): Promise<Book> => {
-  const d = await getDoc(doc(firebaseDb, BOOKS, bookId));
-  if (!d.exists()) throw new Error('Book not found');
-  return snap(d);
+  // Check mock data first (for mock IDs)
+  if (bookId.startsWith('mock-')) {
+    const mock = getMockBookById(bookId);
+    if (mock) return mock;
+    throw new Error('Book not found');
+  }
+  try {
+    const d = await getDoc(doc(firebaseDb, BOOKS, bookId));
+    if (!d.exists()) throw new Error('Book not found');
+    return snap(d);
+  } catch {
+    const mock = getMockBookById(bookId);
+    if (mock) return mock;
+    throw new Error('Book not found');
+  }
 };
 
 export const searchBooks = async (filters: BookFilter, lim = 20): Promise<BookSearchResult> => {
