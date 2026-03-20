@@ -1,8 +1,9 @@
 /**
  * Firebase Configuration — Firebase JS SDK (Expo Go compatible)
+ * Uses inMemoryPersistence to avoid browser localStorage dependency
  */
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, initializeAuth, inMemoryPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
@@ -15,9 +16,18 @@ const firebaseConfig = {
   appId: '1:263118521985:ios:ff59c06a2ebea0aa902f80',
 };
 
+// Initialize app (safe to call multiple times)
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-export const firebaseAuth = getAuth(app);
+// Initialize auth — initializeAuth can only be called once, getAuth after that
+let _auth: ReturnType<typeof getAuth>;
+try {
+  _auth = initializeAuth(app, { persistence: inMemoryPersistence });
+} catch {
+  _auth = getAuth(app);
+}
+
+export const firebaseAuth = _auth;
 export const firebaseDb = getFirestore(app);
 export const firebaseStorage = getStorage(app);
 
