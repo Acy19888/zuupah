@@ -23,7 +23,7 @@ import { TYPOGRAPHY } from '@constants/typography';
  * ProfileScreen Component
  * Displays user profile and account settings
  */
-const ProfileScreen: React.FC<any> = () => {
+const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const { user, handleSignOut } = useAuth();
 
   const handleLogout = async () => {
@@ -68,7 +68,7 @@ const ProfileScreen: React.FC<any> = () => {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Account</Text>
 
-              <TouchableOpacity style={styles.settingItem}>
+              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('EditProfile')}>
                 <View style={styles.settingContent}>
                   <Icon
                     name="account-edit"
@@ -83,7 +83,7 @@ const ProfileScreen: React.FC<any> = () => {
                 <Icon name="chevron-right" size={24} color={COLORS.lightText} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.settingItem}>
+              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('ChangePassword')}>
                 <View style={styles.settingContent}>
                   <Icon
                     name="lock-reset"
@@ -117,7 +117,7 @@ const ProfileScreen: React.FC<any> = () => {
                 <Icon name="chevron-right" size={24} color={COLORS.lightText} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.settingItem}>
+              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Appearance')}>
                 <View style={styles.settingContent}>
                   <Icon
                     name="palette"
@@ -132,7 +132,7 @@ const ProfileScreen: React.FC<any> = () => {
                 <Icon name="chevron-right" size={24} color={COLORS.lightText} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.settingItem}>
+              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('ParentalControls')}>
                 <View style={styles.settingContent}>
                   <Icon
                     name="shield-account"

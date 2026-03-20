@@ -14,6 +14,10 @@ import LibraryScreen from '@screens/library/LibraryScreen';
 import PenScreen from '@screens/pen/PenScreen';
 import FirmwareUpdateScreen from '@screens/pen/FirmwareUpdateScreen';
 import ProfileScreen from '@screens/profile/ProfileScreen';
+import EditProfileScreen from '@screens/profile/EditProfileScreen';
+import ChangePasswordScreen from '@screens/profile/ChangePasswordScreen';
+import AppearanceScreen from '@screens/profile/AppearanceScreen';
+import ParentalControlsScreen from '@screens/profile/ParentalControlsScreen';
 import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
 
@@ -27,6 +31,7 @@ const HeaderLogo: React.FC = () => (
 const Tab = createBottomTabNavigator();
 const StoreStack = createStackNavigator();
 const PenStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 
 /**
  * Store Stack Navigator
@@ -69,6 +74,21 @@ const PenStackNavigator: React.FC = () => {
         component={FirmwareUpdateScreen}
       />
     </PenStack.Navigator>
+  );
+};
+
+/**
+ * Profile Stack Navigator
+ */
+const ProfileStackNavigator: React.FC = () => {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
+      <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
+      <ProfileStack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <ProfileStack.Screen name="Appearance" component={AppearanceScreen} />
+      <ProfileStack.Screen name="ParentalControls" component={ParentalControlsScreen} />
+    </ProfileStack.Navigator>
   );
 };
 
@@ -130,7 +150,7 @@ const MainTabNavigator: React.FC = () => {
 
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (

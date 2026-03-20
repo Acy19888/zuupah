@@ -12,6 +12,7 @@ export const useBooks = () => {
     books,
     libraryBooks,
     filteredBooks,
+    downloads,
     isLoading,
     error,
     searchQuery,
@@ -89,7 +90,6 @@ export const useBooks = () => {
 
   const handleStartDownload = useCallback(
     (bookId: string) => {
-      // Find the book in all available books
       const book = books.find(b => b.id === bookId);
       if (!book) return;
 
@@ -97,16 +97,25 @@ export const useBooks = () => {
       const alreadyInLibrary = useBookStore.getState().libraryBooks.some(b => b.id === bookId);
       if (alreadyInLibrary) return;
 
-      // Add to library immediately
+      // Add to library and start download
       addToLibrary(book);
       startDownload(bookId);
 
-      // Simulate download completing after 1.5 seconds
-      setTimeout(() => {
-        completeDownload(bookId, `local-mock/${bookId}`);
-      }, 1500);
+      // Animate progress: 0 → 100% in ~2.5s (steps every 250ms)
+      const STEPS = 10;
+      const INTERVAL = 250;
+      let step = 0;
+      const timer = setInterval(() => {
+        step += 1;
+        const progress = Math.round((step / STEPS) * 100);
+        updateDownloadProgress(bookId, progress);
+        if (step >= STEPS) {
+          clearInterval(timer);
+          completeDownload(bookId, `local-mock/${bookId}`);
+        }
+      }, INTERVAL);
     },
-    [books, addToLibrary, startDownload, completeDownload]
+    [books, addToLibrary, startDownload, updateDownloadProgress, completeDownload]
   );
 
   const handleUpdateProgress = useCallback(
@@ -148,6 +157,7 @@ export const useBooks = () => {
     books: filteredBooks,
     libraryBooks,
     allBooks: books,
+    downloads,
     isLoading,
     error,
     searchQuery,

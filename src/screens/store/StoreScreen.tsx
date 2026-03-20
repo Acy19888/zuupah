@@ -29,6 +29,8 @@ import { TYPOGRAPHY } from '@constants/typography';
 const StoreScreen: React.FC<any> = ({ navigation }) => {
   const {
     books,
+    downloads,
+    libraryBooks,
     isLoading,
     error,
     searchQuery,
@@ -61,14 +63,21 @@ const StoreScreen: React.FC<any> = ({ navigation }) => {
     handleStartDownload(bookId);
   };
 
-  const renderBookCard = ({ item }: any) => (
-    <BookCard
-      book={item}
-      onPress={handleBookPress}
-      onDownload={handleDownload}
-      compact={false}
-    />
-  );
+  const renderBookCard = ({ item }: any) => {
+    const dl = downloads.get(item.id);
+    const isInLibrary = libraryBooks.some((b: any) => b.id === item.id);
+    return (
+      <BookCard
+        book={item}
+        onPress={handleBookPress}
+        onDownload={handleDownload}
+        isDownloading={dl?.status === 'downloading'}
+        downloadProgress={dl?.progress ?? 0}
+        isDownloaded={isInLibrary && dl?.status === 'completed'}
+        compact={false}
+      />
+    );
+  };
 
   if (isLoading && books.length === 0) {
     return <LoadingSpinner text="Loading books..." fullScreen />;
