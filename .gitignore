@@ -52,3 +52,4 @@ GoogleService-Info.plist
 # Misc
 *.log
 .turbo/
+.github/workflows/ci.yml
