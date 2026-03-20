@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '@screens/auth/LoginScreen';
 import RegisterScreen from '@screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '@screens/auth/ForgotPasswordScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 /**
  * AuthNavigator
@@ -20,25 +20,12 @@ const AuthNavigator: React.FC = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animationEnabled: true,
       }}
       initialRouteName="Login"
     >
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{
-          animationTypeForReplace: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPasswordScreen}
-        options={{
-          animationTypeForReplace: 'slide_from_right',
-        }}
-      />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );
 };

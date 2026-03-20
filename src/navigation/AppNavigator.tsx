@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useAuthStore } from '@store/authStore';
 import AuthNavigator from './AuthNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import SplashScreen from '@screens/SplashScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 /**
  * AppNavigator
@@ -27,25 +27,12 @@ const AppNavigator: React.FC = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animationEnabled: true,
       }}
     >
       {isAuthenticated ? (
-        <Stack.Screen
-          name="MainApp"
-          component={MainTabNavigator}
-          options={{
-            animationTypeForReplace: isAuthenticated ? 'pop' : 'fade',
-          }}
-        />
+        <Stack.Screen name="MainApp" component={MainTabNavigator} />
       ) : (
-        <Stack.Screen
-          name="Auth"
-          component={AuthNavigator}
-          options={{
-            animationTypeForReplace: isAuthenticated ? 'fade' : 'pop',
-          }}
-        />
+        <Stack.Screen name="Auth" component={AuthNavigator} />
       )}
     </Stack.Navigator>
   );

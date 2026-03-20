@@ -6,7 +6,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import StoreScreen from '@screens/store/StoreScreen';
 import BookDetailScreen from '@screens/store/BookDetailScreen';
@@ -25,8 +25,8 @@ const HeaderLogo: React.FC = () => (
 );
 
 const Tab = createBottomTabNavigator();
-const StoreStack = createNativeStackNavigator();
-const PenStack = createNativeStackNavigator();
+const StoreStack = createStackNavigator();
+const PenStack = createStackNavigator();
 
 /**
  * Store Stack Navigator
@@ -45,9 +45,6 @@ const StoreStackNavigator: React.FC = () => {
       <StoreStack.Screen
         name="BookDetail"
         component={BookDetailScreen}
-        options={{
-          animationTypeForReplace: 'slide_from_right',
-        }}
       />
     </StoreStack.Navigator>
   );
@@ -70,9 +67,6 @@ const PenStackNavigator: React.FC = () => {
       <PenStack.Screen
         name="FirmwareUpdate"
         component={FirmwareUpdateScreen}
-        options={{
-          animationTypeForReplace: 'slide_from_right',
-        }}
       />
     </PenStack.Navigator>
   );
