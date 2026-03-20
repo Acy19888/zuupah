@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,7 +14,15 @@ import LibraryScreen from '@screens/library/LibraryScreen';
 import PenScreen from '@screens/pen/PenScreen';
 import FirmwareUpdateScreen from '@screens/pen/FirmwareUpdateScreen';
 import ProfileScreen from '@screens/profile/ProfileScreen';
+import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
+
+/** Logo component shown in the navigation header center */
+const HeaderLogo: React.FC = () => (
+  <View style={{ paddingVertical: 4 }}>
+    <ZuupahLogo width={100} />
+  </View>
+);
 
 const Tab = createBottomTabNavigator();
 const StoreStack = createNativeStackNavigator();
@@ -77,7 +86,13 @@ const MainTabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerTitle: () => <HeaderLogo />,
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: COLORS.softPillowBlue,
+        },
+        headerShadowVisible: false,
         tabBarActiveTintColor: COLORS.beachBlue,
         tabBarInactiveTintColor: COLORS.lightText,
         tabBarStyle: {

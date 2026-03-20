@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { useAuth } from '@hooks/useAuth';
 import Button from '@components/common/Button';
+import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
@@ -58,6 +59,9 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text style={styles.backButton}>← Back</Text>
           </TouchableOpacity>
+          <View style={styles.logoRow}>
+            <ZuupahLogo width={140} />
+          </View>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join Zuupah Today</Text>
         </View>
@@ -171,6 +175,11 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 40,
+  },
+  logoRow: {
+    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 8,
   },
   backButton: {
     fontSize: TYPOGRAPHY.fontSize.base,

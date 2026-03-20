@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { useAuth } from '@hooks/useAuth';
 import Button from '@components/common/Button';
+import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
@@ -49,8 +50,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <View style={styles.logoBall} />
-          <Text style={styles.title}>Zuupah</Text>
+          <ZuupahLogo width={180} />
           <Text style={styles.subtitle}>Play. Learn. Explore.</Text>
         </View>
 
@@ -135,18 +135,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 40,
-  },
-  logoBall: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.beachBlue,
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.fontSize['4xl'],
-    fontWeight: '700' as const,
-    color: COLORS.darkText,
+    gap: 12,
   },
   subtitle: {
     fontSize: TYPOGRAPHY.fontSize.base,
