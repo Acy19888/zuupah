@@ -1,12 +1,9 @@
 /**
  * @format
- * Entry point — works for both bare React Native and Expo dev client
+ * Entry point — Expo Go compatible
+ * registerRootComponent wraps the app correctly for Expo Go and bare RN builds
  */
-
-import { AppRegistry } from 'react-native';
+import { registerRootComponent } from 'expo';
 import App from './src/App';
 
-// For Expo dev client builds the app name must match app.config.js slug
-const appName = 'ZuupahApp';
-
-AppRegistry.registerComponent(appName, () => App);
+registerRootComponent(App);

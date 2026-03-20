@@ -13,7 +13,6 @@ import {
   Platform,
   TouchableOpacity,
   Text,
-  CheckBox,
 } from 'react-native';
 import { useAuth } from '@hooks/useAuth';
 import Button from '@components/common/Button';
@@ -121,23 +120,27 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
           )}
 
           <View style={styles.checkboxGroup}>
-            <View style={styles.checkbox}>
-              <CheckBox
-                value={acceptTerms}
-                onValueChange={setAcceptTerms}
-                disabled={isLoading}
-              />
+            <TouchableOpacity
+              style={styles.checkbox}
+              onPress={() => !isLoading && setAcceptTerms(!acceptTerms)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkboxBox, acceptTerms && styles.checkboxChecked]}>
+                {acceptTerms && <Text style={styles.checkboxTick}>✓</Text>}
+              </View>
               <Text style={styles.checkboxLabel}>I accept the Terms of Service</Text>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.checkbox}>
-              <CheckBox
-                value={acceptPrivacy}
-                onValueChange={setAcceptPrivacy}
-                disabled={isLoading}
-              />
+            <TouchableOpacity
+              style={styles.checkbox}
+              onPress={() => !isLoading && setAcceptPrivacy(!acceptPrivacy)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkboxBox, acceptPrivacy && styles.checkboxChecked]}>
+                {acceptPrivacy && <Text style={styles.checkboxTick}>✓</Text>}
+              </View>
               <Text style={styles.checkboxLabel}>I accept the Privacy Policy</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <Button
@@ -250,6 +253,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  checkboxBox: {
+    width: 22,
+    height: 22,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 4,
+  },
+  checkboxChecked: {
+    backgroundColor: COLORS.beachBlue,
+    borderColor: COLORS.beachBlue,
+  },
+  checkboxTick: {
+    color: COLORS.white,
+    fontSize: 13,
+    fontWeight: '700' as const,
+    lineHeight: 16,
   },
   checkboxLabel: {
     flex: 1,

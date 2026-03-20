@@ -11,6 +11,7 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
+  Text,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useBooks } from '@hooks/useBooks';
