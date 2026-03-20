@@ -1,5 +1,8 @@
 # Dependencies
 node_modules/
+
+# Expo generated cache (not needed in repo)
+.expo/
 npm-debug.log
 yarn-error.log
 .pnp
@@ -45,9 +48,9 @@ local.properties
 android/app/build/
 ios/build/
 
-# Firebase
-google-services.json
-GoogleService-Info.plist
+# Firebase (committed for EAS Build — dev only, no prod secrets here)
+# google-services.json
+# GoogleService-Info.plist
 
 # Misc
 *.log

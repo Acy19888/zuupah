@@ -7,6 +7,7 @@ module.exports = {
     icon: "./src/assets/images/icon.png",
     scheme: "zuupah",
     userInterfaceStyle: "light",
+    newArchEnabled: false,
     splash: {
       backgroundColor: "#38b6c9",
     },
@@ -28,24 +29,18 @@ module.exports = {
         backgroundColor: "#38b6c9",
       },
       permissions: [
-        "BLUETOOTH",
-        "BLUETOOTH_ADMIN",
-        "BLUETOOTH_SCAN",
-        "BLUETOOTH_CONNECT",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.INTERNET",
       ],
+      googleServicesFile: "./android/app/google-services.json",
     },
     plugins: [
-      [
-        "react-native-ble-plx",
-        {
-          isBackgroundEnabled: false,
-          modes: ["peripheral", "central"],
-          bluetoothAlwaysPermission:
-            "Allow Zuupah to connect to your Zuupah Pen via Bluetooth.",
-        },
-      ],
+      "expo-dev-client",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
     ],
