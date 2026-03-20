@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Book } from '@types/book';
+import { getBookCoverSource } from '@services/firebase/mockBooksData';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 import Card from './common/Card';
@@ -50,9 +51,8 @@ export const BookCard: React.FC<BookCardProps> = ({
         onPress={() => onPress(book.id)}
       >
         <Image
-          source={{ uri: book.coverUrl }}
+          source={getBookCoverSource(book)}
           style={styles.compactImage}
-          defaultSource={require('../../assets/placeholder.png')}
         />
         <Text style={styles.compactTitle} numberOfLines={2}>
           {book.title}
@@ -71,9 +71,8 @@ export const BookCard: React.FC<BookCardProps> = ({
     >
       <View style={styles.container}>
         <Image
-          source={{ uri: book.coverUrl }}
+          source={getBookCoverSource(book)}
           style={styles.image}
-          defaultSource={require('../../assets/placeholder.png')}
         />
 
         <View style={styles.content}>

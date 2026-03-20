@@ -89,9 +89,24 @@ export const useBooks = () => {
 
   const handleStartDownload = useCallback(
     (bookId: string) => {
+      // Find the book in all available books
+      const book = books.find(b => b.id === bookId);
+      if (!book) return;
+
+      // Skip if already in library
+      const alreadyInLibrary = useBookStore.getState().libraryBooks.some(b => b.id === bookId);
+      if (alreadyInLibrary) return;
+
+      // Add to library immediately
+      addToLibrary(book);
       startDownload(bookId);
+
+      // Simulate download completing after 1.5 seconds
+      setTimeout(() => {
+        completeDownload(bookId, `local-mock/${bookId}`);
+      }, 1500);
     },
-    [startDownload]
+    [books, addToLibrary, startDownload, completeDownload]
   );
 
   const handleUpdateProgress = useCallback(

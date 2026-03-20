@@ -4,13 +4,31 @@
  */
 import { Book } from '@types/book';
 
+// ── Local cover images (require = resolved at build time) ──────────────────
+export const BOOK_COVER_IMAGES: Record<string, any> = {
+  'mock-book-1': require('../../assets/books/leo-the-lion.png'),
+  'mock-book-2': require('../../assets/books/ella-the-elephant.png'),
+  'mock-book-3': require('../../assets/books/zara-the-zebra.png'),
+  'mock-book-4': require('../../assets/books/gigi-the-giraffe.png'),
+  'mock-book-5': require('../../assets/books/pablo-the-penguin.png'),
+  'mock-book-6': require('../../assets/books/mia-the-monkey.png'),
+};
+
+// Returns the Image source for a book: local asset for mocks, URI string for real books
+export const getBookCoverSource = (book: Book): any => {
+  if (BOOK_COVER_IMAGES[book.id]) {
+    return BOOK_COVER_IMAGES[book.id];
+  }
+  return { uri: book.coverUrl };
+};
+
 export const MOCK_ZOO_BOOKS: Book[] = [
   {
     id: 'mock-book-1',
     title: 'Leo the Lion',
     description:
       'Leo lives in the savanna and loves to roar! Follow Leo through a fun day at the zoo, where he meets new friends and learns to share.',
-    coverUrl: 'https://placehold.co/300x400/ff5a1f/ffffff?text=Leo+%F0%9F%A6%81',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 0,
     isFree: true,
@@ -32,7 +50,7 @@ export const MOCK_ZOO_BOOKS: Book[] = [
     title: 'Ella the Elephant',
     description:
       'Ella the elephant has the biggest ears in the whole zoo! She uses them to fan her friends on hot days. A story about kindness and friendship.',
-    coverUrl: 'https://placehold.co/300x400/38b6c9/ffffff?text=Ella+%F0%9F%90%98',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 0,
     isFree: true,
@@ -54,7 +72,7 @@ export const MOCK_ZOO_BOOKS: Book[] = [
     title: 'Zara the Zebra',
     description:
       'No two zebras have the same stripes — just like no two children are the same! Zara celebrates what makes everyone special.',
-    coverUrl: 'https://placehold.co/300x400/2d3748/ffffff?text=Zara+%F0%9F%A6%93',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 2.99,
     isFree: false,
@@ -76,7 +94,7 @@ export const MOCK_ZOO_BOOKS: Book[] = [
     title: 'Gigi the Giraffe',
     description:
       'Gigi can see the whole zoo from up high! She spots a lost baby penguin and goes on an adventure to help him find his family.',
-    coverUrl: 'https://placehold.co/300x400/ffc400/333333?text=Gigi+%F0%9F%A6%92',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 0,
     isFree: true,
@@ -98,7 +116,7 @@ export const MOCK_ZOO_BOOKS: Book[] = [
     title: 'Pablo the Penguin',
     description:
       'Pablo lives in the cold section of the zoo but dreams of warmer adventures. He packs his tiny backpack and sets off to explore!',
-    coverUrl: 'https://placehold.co/300x400/eef6f7/333333?text=Pablo+%F0%9F%90%A7',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 1.99,
     isFree: false,
@@ -120,7 +138,7 @@ export const MOCK_ZOO_BOOKS: Book[] = [
     title: 'Mia the Monkey',
     description:
       'Mia loves to count bananas, jump from tree to tree, and make the other animals laugh. A playful story that teaches counting 1 to 10.',
-    coverUrl: 'https://placehold.co/300x400/ff5a1f/ffffff?text=Mia+%F0%9F%90%92',
+    coverUrl: 'local',
     audioFileUrl: '',
     price: 0,
     isFree: true,

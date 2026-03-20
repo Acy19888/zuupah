@@ -17,6 +17,7 @@ import { useBooks } from '@hooks/useBooks';
 import Button from '@components/common/Button';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import * as bookService from '@services/firebase/books';
+import { getBookCoverSource } from '@services/firebase/mockBooksData';
 import { Book } from '@types/book';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
@@ -86,9 +87,8 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
 
         <View style={styles.content}>
           <Image
-            source={{ uri: book.coverUrl }}
+            source={getBookCoverSource(book)}
             style={styles.cover}
-            defaultSource={require('../../assets/placeholder.png')}
           />
 
           <View style={styles.info}>
