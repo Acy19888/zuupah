@@ -97,7 +97,7 @@ export const signInWithGoogle = async (): Promise<User> => {
   return user;
 };
 
-export const signOutUser = async (): Promise<void> => {
+export const signOut = async (): Promise<void> => {
   _currentUser = null;
   await clearToken();
   await AsyncStorage.removeItem(SESSION_KEY);
