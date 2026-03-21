@@ -25,10 +25,13 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
   const { bookId, fromLibrary = false } = route.params ?? {};
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-  const { handleStartDownload, libraryBooks } = useBooks();
+  const { handleStartDownload, libraryBooks, downloads } = useBooks();
   const { ratedBooks, usedBooks, rateBook, markBookAsUsed } = useBookStore();
   const { tc } = useAppTheme();
 
+  const dl              = downloads.get(bookId);
+  const isDownloading   = dl?.status === 'downloading';
+  const downloadProgress = dl?.progress ?? 0;
   const isInLibrary     = libraryBooks.some((b: any) => b.id === bookId);
   const showLibraryMode = fromLibrary || isInLibrary;
   const existingRating  = ratedBooks[bookId] ?? 0;
@@ -170,14 +173,24 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
               {book.isFree ? 'Free' : `$${book.price.toFixed(2)}`}
             </Text>
           </View>
-          <Button
-            title={isInLibrary ? 'Downloaded ✓' : 'Download'}
-            onPress={handleDownload}
-            disabled={isInLibrary}
-            size="large"
-            style={styles.downloadButton}
-            fullWidth
-          />
+          <View style={styles.downloadButton}>
+            {isDownloading ? (
+              <View style={styles.progressWrapper}>
+                <View style={[styles.progressBg, { backgroundColor: tc.border }]}>
+                  <View style={[styles.progressBar, { width: `${downloadProgress}%` as any }]} />
+                </View>
+                <Text style={[styles.progressLabel, { color: tc.text }]}>{downloadProgress}%</Text>
+              </View>
+            ) : (
+              <Button
+                title={isInLibrary ? 'Downloaded ✓' : 'Download'}
+                onPress={handleDownload}
+                disabled={isInLibrary}
+                size="large"
+                fullWidth
+              />
+            )}
+          </View>
         </View>
       )}
     </SafeAreaView>
@@ -220,6 +233,10 @@ const styles = StyleSheet.create({
   priceContainer: { paddingHorizontal: 12 },
   price: { fontSize: TYPOGRAPHY.fontSize.lg, fontFamily: 'Nunito-Bold', color: COLORS.zestyOrange },
   downloadButton: { flex: 1 },
+  progressWrapper: { flex: 1, gap: 6, justifyContent: 'center' },
+  progressBg: { height: 10, borderRadius: 5, overflow: 'hidden' },
+  progressBar: { height: '100%', borderRadius: 5, backgroundColor: '#3b82f6' },
+  progressLabel: { textAlign: 'center', fontSize: 13, fontFamily: 'Nunito-SemiBold' },
   ratingSection: { flex: 1, alignItems: 'center', gap: 8 },
   ratedTitle: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold' },
   starsRow: { flexDirection: 'row', gap: 6, marginVertical: 4 },
