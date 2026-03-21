@@ -111,21 +111,36 @@ export const usePenStore = create<PenStore>((set, get) => ({
         throw new Error('Device not found');
       }
 
+      const GB = 1024 * 1024 * 1024;
+      const mockStorageTotal = 4 * GB;
+      const mockStorageUsed  = Math.round(1.24 * GB); // ~1.24 GB used
+
       const pen: Pen = {
         id: deviceId,
         name,
-        serialNumber: `SN-${deviceId.substring(0, 8)}`,
-        firmwareVersion: '1.0.0',
-        batteryLevel: 100,
+        serialNumber: `SN-${deviceId.substring(0, 8).toUpperCase()}`,
+        firmwareVersion: '2.1.4',
+        batteryLevel: 78,
         color: 'blue',
         isConnected: true,
         lastConnectedAt: new Date().toISOString(),
-        storageUsed: 0,
-        storageTotal: 1024 * 1024 * 100, // 100MB
+        storageUsed: mockStorageUsed,
+        storageTotal: mockStorageTotal,
+      };
+
+      const mockStatus = {
+        serialNumber: pen.serialNumber,
+        firmwareVersion: pen.firmwareVersion,
+        batteryLevel: pen.batteryLevel,
+        storageUsed: mockStorageUsed,
+        storageTotal: mockStorageTotal,
+        isCharging: false,
+        lastUpdated: Date.now(),
       };
 
       set({
         connectedPen: pen,
+        penStatus: mockStatus,
         connectionStatus: PenConnectionStatus.CONNECTED,
         isLoading: false,
       });
