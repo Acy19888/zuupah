@@ -18,6 +18,8 @@ import AppearanceScreen from '@screens/profile/AppearanceScreen';
 import LanguageScreen from '@screens/profile/LanguageScreen';
 import ParentalControlsScreen from '@screens/profile/ParentalControlsScreen';
 import NotificationsScreen from '@screens/profile/NotificationsScreen';
+import TermsScreen from '@screens/profile/TermsScreen';
+import HelpScreen from '@screens/profile/HelpScreen';
 import ZuupahLogo from '@components/ZuupahLogo';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useI18n } from '@hooks/useI18n';
@@ -65,6 +67,8 @@ const ProfileStackNavigator: React.FC = () => (
     <ProfileStack.Screen name="Language" component={LanguageScreen} />
     <ProfileStack.Screen name="ParentalControls" component={ParentalControlsScreen} />
     <ProfileStack.Screen name="Notifications" component={NotificationsScreen} />
+    <ProfileStack.Screen name="Terms" component={TermsScreen} />
+    <ProfileStack.Screen name="Help" component={HelpScreen} />
   </ProfileStack.Navigator>
 );
 

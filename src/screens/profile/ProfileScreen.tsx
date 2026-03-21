@@ -111,11 +111,16 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('support').toUpperCase()}</Text>
               {[
-                { icon: 'help-circle',   label: t('helpSupport'),  desc: 'FAQs and contact us' },
-                { icon: 'file-document', label: t('termsPrivacy'), desc: 'Our policies' },
-                { icon: 'information',   label: t('about'),         desc: 'Version 0.1.0' },
+                { icon: 'help-circle',   label: t('helpSupport'),  desc: 'FAQs and contact',  screen: 'Help' },
+                { icon: 'file-document', label: t('termsPrivacy'), desc: 'Terms & Privacy',    screen: 'Terms' },
+                { icon: 'information',   label: t('about'),         desc: 'Version 0.1.0',     screen: null },
               ].map(item => (
-                <TouchableOpacity key={item.label} style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]}>
+                <TouchableOpacity
+                  key={item.label}
+                  style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]}
+                  onPress={() => item.screen && navigation.navigate(item.screen)}
+                  activeOpacity={item.screen ? 0.7 : 1}
+                >
                   <View style={styles.settingContent}>
                     <Icon name={item.icon as any} size={24} color={COLORS.beachBlue} />
                     <View style={styles.settingText}>
@@ -123,7 +128,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                       <Text style={[styles.settingDesc, { color: tc.textSecondary }]}>{item.desc}</Text>
                     </View>
                   </View>
-                  <Icon name="chevron-right" size={24} color={tc.textSecondary} />
+                  {item.screen && <Icon name="chevron-right" size={24} color={tc.textSecondary} />}
                 </TouchableOpacity>
               ))}
             </View>

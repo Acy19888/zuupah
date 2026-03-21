@@ -3,13 +3,14 @@
  * View and manage downloaded books
  */
 
-import React from 'react';
-import { View, StyleSheet, FlatList, Text, SafeAreaView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList, Text, SafeAreaView } from 'react-native';
 import { useBooks } from '@hooks/useBooks';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useI18n } from '@hooks/useI18n';
 import BookCard from '@components/BookCard';
 import LoadingSpinner from '@components/common/LoadingSpinner';
+import ConfirmModal from '@components/common/ConfirmModal';
 import { TYPOGRAPHY } from '@constants/typography';
 
 const LibraryScreen: React.FC<any> = ({ navigation }) => {
@@ -17,25 +18,25 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
   const { tc } = useAppTheme();
   const { t } = useI18n();
 
+  // Confirm-remove modal state
+  const [pendingRemoveId, setPendingRemoveId]       = useState<string | null>(null);
+  const [pendingRemoveTitle, setPendingRemoveTitle] = useState<string>('');
+
   const handleBookPress = (bookId: string) => {
     navigation.navigate('LibraryBookDetail', { bookId, fromLibrary: true });
   };
 
   const confirmRemove = (bookId: string, bookTitle?: string) => {
-    Alert.alert(
-      t('removingBook'),
-      t('removeConfirm'),
-      [
-        { text: t('cancel'), style: 'cancel' },
-        {
-          text: t('remove'),
-          style: 'destructive',
-          onPress: () => handleRemoveFromLibrary(bookId),
-        },
-      ],
-      { cancelable: true }
-    );
+    setPendingRemoveId(bookId);
+    setPendingRemoveTitle(bookTitle ?? '');
   };
+
+  const handleConfirmRemove = () => {
+    if (pendingRemoveId) handleRemoveFromLibrary(pendingRemoveId);
+    setPendingRemoveId(null);
+  };
+
+  const handleCancelRemove = () => setPendingRemoveId(null);
 
   const renderBookCard = ({ item }: any) => (
     <BookCard
@@ -52,7 +53,7 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
       <Text style={styles.emptyIcon}>📚</Text>
       <Text style={[styles.emptyTitle, { color: tc.text }]}>{t('noBooks')}</Text>
       <Text style={[styles.emptyText, { color: tc.textSecondary }]}>
-        Browse the store and download books to add them to your library
+        {t('noBooksHint')}
       </Text>
     </View>
   );
@@ -67,6 +68,7 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
           {libraryBooks.length} book{libraryBooks.length !== 1 ? 's' : ''}
         </Text>
       </View>
+
       <FlatList
         data={libraryBooks}
         renderItem={renderBookCard}
@@ -75,6 +77,23 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
+      />
+
+      {/* On-brand confirmation modal */}
+      <ConfirmModal
+        visible={pendingRemoveId !== null}
+        icon="book-remove-outline"
+        title={t('removingBook')}
+        message={
+          pendingRemoveTitle
+            ? `Remove "${pendingRemoveTitle}" from your library?`
+            : t('removeConfirm')
+        }
+        confirmLabel={t('remove')}
+        cancelLabel={t('cancel')}
+        destructive
+        onConfirm={handleConfirmRemove}
+        onCancel={handleCancelRemove}
       />
     </SafeAreaView>
   );
