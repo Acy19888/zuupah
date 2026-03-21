@@ -25,15 +25,19 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
   const { bookId, fromLibrary = false } = route.params ?? {};
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-  const { handleStartDownload, libraryBooks, downloads } = useBooks();
-  const { ratedBooks, usedBooks, rateBook, markBookAsUsed } = useBookStore();
+  const { libraryBooks, downloads } = useBooks();
+  const {
+    ratedBooks, usedBooks, rateBook, markBookAsUsed,
+    startDownload, updateDownloadProgress, completeDownload, addToLibrary,
+  } = useBookStore();
   const { tc } = useAppTheme();
 
-  const dl              = downloads.get(bookId);
-  const isDownloading   = dl?.status === 'downloading';
+  const dl               = downloads.get(bookId);
+  const isDownloading    = dl?.status === 'downloading';
   const downloadProgress = dl?.progress ?? 0;
-  const isInLibrary     = libraryBooks.some((b: any) => b.id === bookId);
-  const showLibraryMode = fromLibrary || isInLibrary;
+  const isInLibrary      = libraryBooks.some((b: any) => b.id === bookId);
+  // Only flip to library/rating mode once download is fully done (not while in progress)
+  const showLibraryMode  = fromLibrary || (isInLibrary && !isDownloading);
   const existingRating  = ratedBooks[bookId] ?? 0;
   const [selectedStars, setSelectedStars] = useState(existingRating);
   const hasBeenUsed     = usedBooks.includes(bookId);
@@ -50,7 +54,23 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
     finally { setLoading(false); }
   };
 
-  const handleDownload   = () => { if (book) handleStartDownload(book.id); };
+  const handleDownload = () => {
+    if (!book || isInLibrary) return;
+    addToLibrary(book);
+    startDownload(book.id);
+    const STEPS = 10;
+    const INTERVAL = 250;
+    let step = 0;
+    const timer = setInterval(() => {
+      step += 1;
+      const progress = Math.round((step / STEPS) * 100);
+      updateDownloadProgress(book.id, progress);
+      if (step >= STEPS) {
+        clearInterval(timer);
+        completeDownload(book.id, `local-mock/${book.id}`);
+      }
+    }, INTERVAL);
+  };
   const handleMarkAsUsed = () => { markBookAsUsed(bookId); };
   const handleRating     = () => {
     if (selectedStars > 0) { rateBook(bookId, selectedStars); setRatingSubmitted(true); }
