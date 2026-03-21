@@ -17,52 +17,89 @@ import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 // ─── Pen Illustration ────────────────────────────────────────────────────────
-// Pill-shaped pen: white top section (flower btn + 3 control btns) + teal bottom
+// Faithful to the real Zuupah pen:
+//  • White upper body with speaker grille (dot pattern), power/+/− buttons, LED
+//  • Baby-blue lower grip that tapers to a rounded tip
+//  • Clean drop shadow
 
-const CAPSULE_W = 112;
-const CAPSULE_H = 268;
-const CAPSULE_R = CAPSULE_W / 2;
+const PEN_W  = 104;   // pen width
+const PEN_R  = PEN_W / 2;
+const BABY_BLUE = '#7DD0EE';
+
+// Speaker grille — 8 holes arranged in a daisy ring + 1 centre hole
+const GRILLE_R = 11; // ring radius in px
+const GRILLE_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
+
+const SpeakerGrille: React.FC = () => (
+  <View style={grille.wrap}>
+    {/* centre hole */}
+    <View style={grille.hole} />
+    {/* ring holes */}
+    {GRILLE_ANGLES.map((deg) => {
+      const rad = (deg - 90) * (Math.PI / 180);
+      return (
+        <View
+          key={deg}
+          style={[
+            grille.hole,
+            {
+              position: 'absolute',
+              left: 22 + Math.round(Math.cos(rad) * GRILLE_R) - 2.5,
+              top:  22 + Math.round(Math.sin(rad) * GRILLE_R) - 2.5,
+            },
+          ]}
+        />
+      );
+    })}
+  </View>
+);
+
+const grille = StyleSheet.create({
+  wrap: { width: 48, height: 48, justifyContent: 'center', alignItems: 'center' },
+  hole: { width: 5, height: 5, borderRadius: 2.5, backgroundColor: '#444' },
+});
 
 const PenIllustration: React.FC<{ connected: boolean }> = ({ connected }) => (
   <View style={penIll.wrapper}>
-    {/* Soft glow */}
+    {/* Ambient glow when connected */}
     {connected && <View style={penIll.glow} />}
 
-    {/* Drop shadow wrapper */}
     <View style={penIll.shadow}>
-      {/* Pill capsule — overflow hidden clips both halves into the pill shape */}
-      <View style={penIll.capsule}>
+      {/* ── White upper body ── */}
+      <View style={penIll.whiteBody}>
+        {/* USB-C port notch at the very top */}
+        <View style={penIll.usbPort} />
 
-        {/* ── White top section ── */}
-        <View style={penIll.topHalf}>
-          {/* Flower button */}
-          <View style={penIll.flowerCircle}>
-            <Text style={penIll.flowerEmoji}>🌸</Text>
+        {/* Speaker grille */}
+        <SpeakerGrille />
+
+        {/* Buttons row 1: Power (red-orange) + Volume Up (orange) */}
+        <View style={penIll.btnRow}>
+          <View style={[penIll.btn, { backgroundColor: '#EF6820' }]}>
+            <Icon name="power" size={16} color="#fff" />
           </View>
-
-          {/* Row 1: Power + Volume Up */}
-          <View style={penIll.btnRow}>
-            <View style={[penIll.btn, { backgroundColor: '#EF4E30' }]}>
-              <Icon name="power" size={17} color="#fff" />
-            </View>
-            <View style={[penIll.btn, { backgroundColor: '#F97316' }]}>
-              <Text style={penIll.btnLabel}>+</Text>
-            </View>
-          </View>
-
-          {/* Row 2: Volume Down (centered) */}
-          <View style={[penIll.btn, { backgroundColor: '#EAB308' }]}>
-            <Text style={penIll.btnLabel}>−</Text>
+          <View style={[penIll.btn, { backgroundColor: '#F0A030' }]}>
+            <Text style={penIll.btnLabel}>+</Text>
           </View>
         </View>
 
-        {/* ── Teal bottom section ── */}
-        <View style={[penIll.bottomHalf, { backgroundColor: COLORS.beachBlue }]} />
+        {/* LED status dot (green = on) */}
+        <View style={[penIll.led, { backgroundColor: connected ? '#44EE55' : '#CCCCCC' }]} />
+
+        {/* Volume Down (gold/yellow) centred below */}
+        <View style={[penIll.btn, { backgroundColor: '#D4A820' }]}>
+          <Text style={penIll.btnLabel}>−</Text>
+        </View>
       </View>
+
+      {/* ── Baby-blue lower grip ── */}
+      {/* Two-piece: straight rect + tapered rounded bottom */}
+      <View style={penIll.blueUpper} />
+      <View style={penIll.blueLower} />
     </View>
 
-    {/* Status pill */}
-    <View style={[penIll.statusPill, { backgroundColor: connected ? COLORS.success + '1A' : '#F3F4F6' }]}>
+    {/* Status label */}
+    <View style={[penIll.statusPill, { backgroundColor: connected ? '#E8FFF0' : '#F3F4F6' }]}>
       <View style={[penIll.statusDot, { backgroundColor: connected ? COLORS.success : '#9CA3AF' }]} />
       <Text style={[penIll.statusText, { color: connected ? COLORS.success : '#6B7280' }]}>
         {connected ? 'Connected' : 'Not connected'}
@@ -72,34 +109,47 @@ const PenIllustration: React.FC<{ connected: boolean }> = ({ connected }) => (
 );
 
 const penIll = StyleSheet.create({
-  wrapper:      { alignItems: 'center', paddingVertical: 24 },
-  glow:         { position: 'absolute', width: 120, height: 280, borderRadius: 60, backgroundColor: 'rgba(30,175,200,0.13)', top: 12 },
-  shadow:       {
-    shadowColor: '#1EAFC8', shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.22, shadowRadius: 18, elevation: 10,
+  wrapper:    { alignItems: 'center', paddingVertical: 24 },
+  glow:       {
+    position: 'absolute', width: 130, height: 310, borderRadius: 65, top: 10,
+    backgroundColor: 'rgba(125,208,238,0.18)',
   },
-  capsule:      { width: CAPSULE_W, height: CAPSULE_H, borderRadius: CAPSULE_R, overflow: 'hidden' },
-  topHalf:      {
-    height: Math.round(CAPSULE_H * 0.595),
-    backgroundColor: '#F5F8FA',
+  shadow:     {
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    paddingBottom: 6,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18, shadowRadius: 20, elevation: 12,
   },
-  bottomHalf:   { flex: 1 },
-  flowerCircle: {
-    width: 46, height: 46, borderRadius: 23,
-    backgroundColor: '#E4E6EB',
-    justifyContent: 'center', alignItems: 'center',
+  // White body — rounded top, straight sides, flat bottom
+  whiteBody:  {
+    width: PEN_W,
+    backgroundColor: '#F3F5F7',
+    borderTopLeftRadius: PEN_R,
+    borderTopRightRadius: PEN_R,
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    gap: 8,
   },
-  flowerEmoji:  { fontSize: 22 },
-  btnRow:       { flexDirection: 'row', gap: 10 },
-  btn:          { width: 42, height: 42, borderRadius: 21, justifyContent: 'center', alignItems: 'center' },
-  btnLabel:     { color: '#fff', fontSize: 22, fontFamily: 'Nunito-Bold', lineHeight: 28 },
-  statusPill:   { flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 6, marginTop: 18 },
-  statusDot:    { width: 8, height: 8, borderRadius: 4 },
-  statusText:   { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold' },
+  usbPort:    {
+    width: 26, height: 7, borderRadius: 3.5,
+    backgroundColor: '#C8CDD4', marginBottom: 2,
+  },
+  btnRow:     { flexDirection: 'row', gap: 10 },
+  btn:        { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  btnLabel:   { color: '#fff', fontSize: 21, fontFamily: 'Nunito-Bold', lineHeight: 26 },
+  led:        { width: 7, height: 7, borderRadius: 3.5, marginTop: -2, marginBottom: -2, alignSelf: 'flex-start', marginLeft: PEN_W / 2 - 26 },
+  // Blue grip — upper straight part (same width as body)
+  blueUpper:  { width: PEN_W, height: 48, backgroundColor: BABY_BLUE },
+  // Blue grip — lower tapered part (max border-radius to taper inward to a round tip)
+  blueLower:  {
+    width: PEN_W, height: 110,
+    backgroundColor: BABY_BLUE,
+    borderBottomLeftRadius: PEN_R,
+    borderBottomRightRadius: PEN_R,
+  },
+  statusPill: { flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 6, marginTop: 20 },
+  statusDot:  { width: 8, height: 8, borderRadius: 4 },
+  statusText: { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold' },
 });
 
 // ─── Battery Bar ─────────────────────────────────────────────────────────────
