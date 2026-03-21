@@ -1,6 +1,6 @@
 /**
  * Language Screen
- * Choose app language: English, Deutsch, Español, 中文
+ * Choose app language: English, Français, Español, 中文
  */
 import React from 'react';
 import {
@@ -16,7 +16,7 @@ import { TYPOGRAPHY } from '@constants/typography';
 
 const LANGUAGE_DESCS: Record<Language, string> = {
   en: 'English',
-  de: 'German / Deutsch',
+  fr: 'French / Français',
   es: 'Spanish / Español',
   zh: 'Chinese / 中文',
 };
@@ -26,7 +26,7 @@ const LanguageScreen: React.FC<any> = ({ navigation }) => {
   const { tc } = useAppTheme();
   const { t } = useI18n();
 
-  const languages: Language[] = ['en', 'de', 'es', 'zh'];
+  const languages: Language[] = ['en', 'fr', 'es', 'zh'];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: tc.background }]}>
