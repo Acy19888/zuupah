@@ -3,9 +3,9 @@
  * Shows pen illustration, battery & storage bars, connect/disconnect
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View, StyleSheet, ScrollView, Text, SafeAreaView, TouchableOpacity,
+  View, StyleSheet, ScrollView, Text, SafeAreaView, TouchableOpacity, Linking, Alert,
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useBluetooth } from '@hooks/useBluetooth';
@@ -267,6 +267,12 @@ const infoRow = StyleSheet.create({
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
+interface LatestFirmware {
+  version: string;
+  changelog: string | null;
+  downloadUrl: string;
+}
+
 const PenScreen: React.FC<any> = ({ navigation }) => {
   const {
     connectedPen, availableDevices, connectionStatus, isScanning,
@@ -275,9 +281,28 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
   } = useBluetooth();
   const { tc } = useAppTheme();
 
+  const [latestFirmware, setLatestFirmware] = useState<LatestFirmware | null>(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
   const isConnected  = connectionStatus === PenConnectionStatus.CONNECTED;
   const isConnecting = connectionStatus === PenConnectionStatus.CONNECTING;
   const isSearch     = connectionStatus === PenConnectionStatus.SCANNING || isScanning;
+
+  // Check for firmware update when pen is connected
+  useEffect(() => {
+    if (!isConnected || !connectedPen) return;
+    const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+    fetch(`${API}/api/firmware/latest`)
+      .then(r => r.json())
+      .then((data: LatestFirmware) => {
+        if (data.version && data.version !== connectedPen.firmwareVersion) {
+          setLatestFirmware(data);
+        } else {
+          setLatestFirmware(null);
+        }
+      })
+      .catch(() => setLatestFirmware(null));
+  }, [isConnected, connectedPen]);
 
   useEffect(() => {
     return () => { if (isScanning) handleStopScan(); };
@@ -345,16 +370,36 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
               <StorageBar used={penStatus.storageUsed} total={penStatus.storageTotal} tc={tc} />
             )}
 
+            {/* Firmware update banner */}
+            {latestFirmware && (
+              <TouchableOpacity
+                onPress={() => setShowUpdateModal(true)}
+                style={[styles.updateBanner]}
+              >
+                <View style={styles.updateBannerLeft}>
+                  <Icon name="update" size={20} color="#fff" />
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={styles.updateBannerTitle}>Update verfügbar: v{latestFirmware.version}</Text>
+                    <Text style={styles.updateBannerSub}>Tippe um Details zu sehen</Text>
+                  </View>
+                </View>
+                <Icon name="chevron-right" size={18} color="#fff" />
+              </TouchableOpacity>
+            )}
+
             {/* Action rows */}
             <View style={[styles.section, { backgroundColor: tc.card, borderColor: tc.border, gap: 0 }]}>
               <TouchableOpacity
                 style={[styles.actionRow, { borderBottomColor: tc.divider, borderBottomWidth: 1 }]}
-                onPress={() => navigation.navigate('FirmwareUpdate')}
+                onPress={() => latestFirmware ? setShowUpdateModal(true) : Alert.alert('Firmware', 'Dein Stift ist auf dem neusten Stand ✓')}
               >
                 <View style={[styles.actionIcon, { backgroundColor: COLORS.beachBlue + '18' }]}>
                   <Icon name="update" size={19} color={COLORS.beachBlue} />
                 </View>
                 <Text style={[styles.actionText, { color: tc.text }]}>Check for Updates</Text>
+                {latestFirmware && (
+                  <View style={styles.updateDot} />
+                )}
                 <Icon name="chevron-right" size={18} color={tc.textSecondary} />
               </TouchableOpacity>
 
@@ -426,6 +471,38 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
 
         <View style={{ height: 32 }} />
       </ScrollView>
+
+      {/* Firmware Update Modal */}
+      {showUpdateModal && latestFirmware && (
+        <View style={modal.overlay}>
+          <View style={[modal.sheet, { backgroundColor: tc.card }]}>
+            <View style={modal.iconWrap}>
+              <Icon name="update" size={32} color={COLORS.beachBlue} />
+            </View>
+            <Text style={[modal.title, { color: tc.text }]}>Update verfügbar</Text>
+            <Text style={[modal.version, { color: COLORS.beachBlue }]}>Version {latestFirmware.version}</Text>
+            {latestFirmware.changelog ? (
+              <View style={[modal.changelogBox, { backgroundColor: tc.background, borderColor: tc.border }]}>
+                <Text style={[modal.changelogLabel, { color: tc.textSecondary }]}>Was ist neu:</Text>
+                <Text style={[modal.changelogText, { color: tc.text }]}>{latestFirmware.changelog}</Text>
+              </View>
+            ) : null}
+            <Text style={[modal.hint, { color: tc.textSecondary }]}>
+              Übertrage die Firmware-Datei auf deinen Stift über die offizielle Zuupah App oder via USB.
+            </Text>
+            <TouchableOpacity
+              style={[modal.btn, { backgroundColor: COLORS.beachBlue }]}
+              onPress={() => Linking.openURL(latestFirmware.downloadUrl)}
+            >
+              <Icon name="download" size={18} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={modal.btnText}>Firmware herunterladen</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={modal.cancelBtn} onPress={() => setShowUpdateModal(false)}>
+              <Text style={[modal.cancelText, { color: tc.textSecondary }]}>Schließen</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -445,8 +522,29 @@ const styles = StyleSheet.create({
   actionRow:   { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   actionIcon:  { width: 38, height: 38, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
   actionText:  { flex: 1, fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold' },
-  deviceRow:   { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10 },
-  transferItem:{ paddingVertical: 10 },
+  deviceRow:      { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10 },
+  transferItem:   { paddingVertical: 10 },
+  updateBanner:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.beachBlue, borderRadius: 14, padding: 14, marginBottom: 12 },
+  updateBannerLeft:{ flexDirection: 'row', alignItems: 'center', flex: 1 },
+  updateBannerTitle:{ color: '#fff', fontFamily: 'Nunito-Bold', fontSize: TYPOGRAPHY.fontSize.sm },
+  updateBannerSub:{ color: 'rgba(255,255,255,0.8)', fontSize: TYPOGRAPHY.fontSize.xs, marginTop: 2 },
+  updateDot:      { width: 8, height: 8, borderRadius: 4, backgroundColor: '#F59E0B', marginRight: 4 },
+});
+
+const modal = StyleSheet.create({
+  overlay:      { position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' } as any,
+  sheet:        { borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 },
+  iconWrap:     { width: 60, height: 60, borderRadius: 18, backgroundColor: COLORS.beachBlue + '18', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', marginBottom: 12 },
+  title:        { fontSize: TYPOGRAPHY.fontSize.xl, fontFamily: 'Nunito-Bold', textAlign: 'center' },
+  version:      { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold', textAlign: 'center', marginTop: 4, marginBottom: 16 },
+  changelogBox: { borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 14 },
+  changelogLabel:{ fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-Bold', marginBottom: 4 },
+  changelogText: { fontSize: TYPOGRAPHY.fontSize.sm, lineHeight: 20 },
+  hint:         { fontSize: TYPOGRAPHY.fontSize.xs, textAlign: 'center', lineHeight: 18, marginBottom: 20 },
+  btn:          { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 12, paddingVertical: 14, marginBottom: 10 },
+  btnText:      { color: '#fff', fontFamily: 'Nunito-Bold', fontSize: TYPOGRAPHY.fontSize.base },
+  cancelBtn:    { alignItems: 'center', paddingVertical: 10 },
+  cancelText:   { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold' },
 });
 
 export default PenScreen;
