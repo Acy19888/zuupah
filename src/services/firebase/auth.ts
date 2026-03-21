@@ -116,3 +116,35 @@ export const getRememberedCredentials = async (): Promise<{ email: string; passw
 };
 
 export const initializeFirebase = () => {};
+
+// ─── Aliases so authStore can call these without changes ─────────────────────
+
+export const signUp = async (params: {
+  email: string; password: string; displayName?: string;
+  firstName?: string; lastName?: string; [key: string]: any;
+}): Promise<User> =>
+  registerUser(params.email, params.password, params.firstName ?? '', params.lastName ?? '');
+
+export const signIn = async (params: { email: string; password: string }): Promise<User> =>
+  signInWithEmailAndPassword(params.email, params.password);
+
+export const sendPasswordResetEmail = async (_email: string): Promise<void> => {
+  // TODO: hook up to real backend endpoint when available
+};
+
+export const confirmPasswordReset = async (_params: { token: string; newPassword: string }): Promise<void> => {
+  // TODO: hook up to real backend endpoint when available
+};
+
+export const updateUserProfile = async (updates: {
+  displayName?: string; photoURL?: string; firstName?: string; lastName?: string; childName?: string;
+}): Promise<User> => {
+  const res = await apiClient.put<{ user: any }>('/api/auth/me', updates);
+  const user = mapApiUser(res.user);
+  _currentUser = user; await saveSession(user); notify(user);
+  return user;
+};
+
+export const sendEmailVerification = async (): Promise<void> => {
+  // TODO: hook up to real backend endpoint when available
+};
