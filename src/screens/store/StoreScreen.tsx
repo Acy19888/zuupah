@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.white,
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '500' as const,
+    fontFamily: 'Nunito-Medium',
   },
   listContent: {
     paddingHorizontal: 12,

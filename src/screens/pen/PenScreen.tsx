@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   subtitle: {
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.success,
   },
   penInfo: {
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   },
   penName: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   penSerial: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   actions: {
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   notConnectedTitle: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 8,
   },
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 8,
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   deviceName: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   deviceSignal: {
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   },
   transferTitle: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 8,
   },
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: TYPOGRAPHY.fontSize.xs,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     minWidth: 40,
   },

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingVertical: 16,
     borderBottomWidth: 1, borderBottomColor: COLORS.border,
   },
-  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const, color: COLORS.darkText },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold', color: COLORS.darkText },
   subtitle: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, marginTop: 4 },
   listContent: { paddingHorizontal: 12, paddingVertical: 12 },
   emptyContainer: {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   emptyIcon: { fontSize: 64, marginBottom: 16 },
   emptyTitle: {
-    fontSize: TYPOGRAPHY.fontSize.xl, fontWeight: '600' as const,
+    fontSize: TYPOGRAPHY.fontSize.xl, fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText, textAlign: 'center', marginBottom: 8,
   },
   emptyText: {

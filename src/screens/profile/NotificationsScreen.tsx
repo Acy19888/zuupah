@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, paddingVertical: 24, gap: 24 },
   header: { marginBottom: 4 },
   backBtn: { marginBottom: 12 },
-  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontWeight: '600' as const },
-  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const, color: COLORS.darkText, marginBottom: 6 },
+  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold' },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold', color: COLORS.darkText, marginBottom: 6 },
   subtitle: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, lineHeight: 20 },
   section: { gap: 0 },
   sectionTitle: {
-    fontSize: TYPOGRAPHY.fontSize.xs, fontWeight: '700' as const,
+    fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-Bold',
     color: COLORS.lightText, textTransform: 'uppercase', letterSpacing: 1,
     marginBottom: 8,
   },
@@ -129,15 +129,15 @@ const styles = StyleSheet.create({
   rowLeft: { flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 12 },
   icon: { marginRight: 12 },
   rowText: { flex: 1 },
-  rowLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '600' as const, color: COLORS.darkText },
+  rowLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold', color: COLORS.darkText },
   rowDesc: { fontSize: TYPOGRAPHY.fontSize.xs, color: COLORS.lightText, marginTop: 2 },
   successBanner: { backgroundColor: COLORS.success, borderRadius: 8, padding: 12 },
-  successText: { color: COLORS.white, fontWeight: '600' as const, textAlign: 'center' },
+  successText: { color: COLORS.white, fontFamily: 'Nunito-SemiBold', textAlign: 'center' },
   saveBtn: {
     backgroundColor: COLORS.beachBlue, borderRadius: 12,
     paddingVertical: 16, alignItems: 'center',
   },
-  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '700' as const },
+  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold' },
 });
 
 export default NotificationsScreen;

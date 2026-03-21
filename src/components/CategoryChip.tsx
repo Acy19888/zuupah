@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '500' as const,
+    fontFamily: 'Nunito-Medium',
     color: COLORS.darkText,
   },
   labelSelected: {

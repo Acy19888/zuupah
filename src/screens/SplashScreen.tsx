@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: 16,
     color: COLORS.beachBlue,
-    fontWeight: '500',
+    fontFamily: 'Nunito-Medium',
     letterSpacing: 0.3,
     textAlign: 'center',
     marginBottom: 48,

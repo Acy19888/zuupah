@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   compactTitle: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 4,
   },
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
     marginBottom: 4,
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   ageText: {
     fontSize: TYPOGRAPHY.fontSize.xs,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   category: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.zestyOrange,
   },
   rating: {
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.error,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     padding: 8,
     textAlign: 'center',
   },
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   downloadingText: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.beachBlue,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
   },
 });
 

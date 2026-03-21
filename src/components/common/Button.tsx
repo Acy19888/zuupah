@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   text: {
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     textAlign: 'center',
   },
 });

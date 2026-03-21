@@ -160,12 +160,12 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, paddingVertical: 24, gap: 24 },
   header: { marginBottom: 4 },
   backBtn: { marginBottom: 12 },
-  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontWeight: '600' as const },
-  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const, color: COLORS.darkText, marginBottom: 6 },
+  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold' },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold', color: COLORS.darkText, marginBottom: 6 },
   subtitle: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, lineHeight: 20 },
   section: { gap: 12 },
   sectionTitle: {
-    fontSize: TYPOGRAPHY.fontSize.sm, fontWeight: '700' as const,
+    fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-Bold',
     color: COLORS.lightText, textTransform: 'uppercase',
   },
   ageGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white, padding: 14, alignItems: 'center', gap: 6, position: 'relative',
   },
   ageCardActive: { backgroundColor: COLORS.beachBlue, borderColor: COLORS.beachBlue },
-  ageLabel: { fontSize: TYPOGRAPHY.fontSize.sm, fontWeight: '700' as const, color: COLORS.darkText },
+  ageLabel: { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-Bold', color: COLORS.darkText },
   ageLabelActive: { color: COLORS.white },
   ageDesc: { fontSize: TYPOGRAPHY.fontSize.xs, color: COLORS.lightText },
   checkBadge: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   chipActive: { borderColor: COLORS.beachBlue, backgroundColor: COLORS.softPillowBlue },
-  chipText: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, fontWeight: '600' as const },
+  chipText: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText, fontFamily: 'Nunito-SemiBold' },
   chipTextActive: { color: COLORS.beachBlue },
   toggleRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -199,15 +199,15 @@ const styles = StyleSheet.create({
   },
   toggleInfo: { flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 12 },
   toggleIcon: { marginRight: 12 },
-  toggleLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '600' as const, color: COLORS.darkText },
+  toggleLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold', color: COLORS.darkText },
   toggleDesc: { fontSize: TYPOGRAPHY.fontSize.xs, color: COLORS.lightText, marginTop: 2 },
   successBanner: { backgroundColor: COLORS.success, borderRadius: 8, padding: 12 },
-  successText: { color: COLORS.white, fontWeight: '600' as const, textAlign: 'center' },
+  successText: { color: COLORS.white, fontFamily: 'Nunito-SemiBold', textAlign: 'center' },
   saveBtn: {
     backgroundColor: COLORS.beachBlue, borderRadius: 12,
     paddingVertical: 16, alignItems: 'center',
   },
-  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '700' as const },
+  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold' },
 });
 
 export default ParentalControlsScreen;

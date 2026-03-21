@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   content: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 32,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.white,
   },
   profileInfo: {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   email: {
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   },
   childName: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     marginBottom: 2,
   },
   verificationBadge: {
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.lightText,
     textTransform: 'uppercase',
     marginBottom: 8,
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   settingDesc: {

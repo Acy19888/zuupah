@@ -141,12 +141,12 @@ const styles = StyleSheet.create({
   backButton: {
     fontSize: TYPOGRAPHY.fontSize.base,
     color: COLORS.beachBlue,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     marginBottom: 16,
   },
   title: {
     fontSize: TYPOGRAPHY.fontSize['3xl'],
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
     marginBottom: 8,
   },
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   input: {
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.white,
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '500' as const,
+    fontFamily: 'Nunito-Medium',
   },
   button: {
     marginTop: 16,
@@ -212,11 +212,11 @@ const styles = StyleSheet.create({
   checkmark: {
     fontSize: 40,
     color: COLORS.white,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
   },
   successTitle: {
     fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   successText: {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   emailHighlight: {
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   successHint: {

@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   input: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   showButtonText: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.beachBlue,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     paddingLeft: 8,
   },
   button: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   link: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.beachBlue,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     textAlign: 'center',
     marginTop: 12,
   },
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.white,
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '500' as const,
+    fontFamily: 'Nunito-Medium',
   },
   footer: {
     flexDirection: 'row',
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.beachBlue,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
   },
 });
 

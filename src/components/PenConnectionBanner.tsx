@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
   },
   details: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   battery: {
     fontSize: TYPOGRAPHY.fontSize.xs,
     color: COLORS.darkText,
-    fontWeight: '500' as const,
+    fontFamily: 'Nunito-Medium',
     marginLeft: 8,
   },
   disconnectButton: {

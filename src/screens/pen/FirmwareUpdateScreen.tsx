@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.fontSize['2xl'],
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   content: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   updateTitle: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
   },
   updateSubtitle: {
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 12,
   },
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   progressTitle: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.darkText,
     marginBottom: 12,
   },
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: TYPOGRAPHY.fontSize.base,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.beachBlue,
     marginBottom: 8,
   },
@@ -281,11 +281,11 @@ const styles = StyleSheet.create({
   checkmarkText: {
     fontSize: 28,
     color: COLORS.white,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
   },
   upToDateTitle: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
     marginBottom: 4,
   },
@@ -313,12 +313,12 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: '600' as const,
+    fontFamily: 'Nunito-SemiBold',
     color: COLORS.lightText,
   },
   versionText: {
     fontSize: TYPOGRAPHY.fontSize.lg,
-    fontWeight: '700' as const,
+    fontFamily: 'Nunito-Bold',
     color: COLORS.darkText,
     marginTop: 4,
   },

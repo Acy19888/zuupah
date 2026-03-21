@@ -163,10 +163,10 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, paddingVertical: 24, gap: 24 },
   header: { marginBottom: 8 },
   backBtn: { marginBottom: 12 },
-  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontWeight: '600' as const },
-  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontWeight: '700' as const },
+  backText: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold' },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold' },
   section: { gap: 12 },
-  sectionTitle: { fontSize: TYPOGRAPHY.fontSize.xs, fontWeight: '700' as const, letterSpacing: 1 },
+  sectionTitle: { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-Bold', letterSpacing: 1 },
   optionGrid: { gap: 10 },
   themeCard: {
     borderRadius: 12, borderWidth: 2,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', gap: 12, position: 'relative',
   },
   themeCardActive: { backgroundColor: COLORS.beachBlue, borderColor: COLORS.beachBlue },
-  themeLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '600' as const, flex: 1 },
+  themeLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold', flex: 1 },
   themeDesc: { fontSize: TYPOGRAPHY.fontSize.xs },
   checkBadge: {
     position: 'absolute', top: 10, right: 10,
@@ -188,21 +188,21 @@ const styles = StyleSheet.create({
     padding: 12, alignItems: 'center', gap: 4,
   },
   sizeBtnActive: { borderColor: COLORS.beachBlue, backgroundColor: COLORS.softPillowBlue },
-  sizeBtnText: { fontWeight: '700' as const },
-  sizeLabel: { fontSize: 11, fontWeight: '500' as const },
+  sizeBtnText: { fontFamily: 'Nunito-Bold' },
+  sizeLabel: { fontSize: 11, fontFamily: 'Nunito-Medium' },
   previewCard: {
     borderRadius: 12, padding: 16,
     borderWidth: 1, gap: 6,
   },
-  previewTitle: { fontWeight: '700' as const },
+  previewTitle: { fontFamily: 'Nunito-Bold' },
   previewBody: { lineHeight: 20 },
   successBanner: { backgroundColor: COLORS.success, borderRadius: 8, padding: 12 },
-  successText: { color: COLORS.white, fontWeight: '600' as const, textAlign: 'center' },
+  successText: { color: COLORS.white, fontFamily: 'Nunito-SemiBold', textAlign: 'center' },
   saveBtn: {
     backgroundColor: COLORS.beachBlue, borderRadius: 12,
     paddingVertical: 16, alignItems: 'center',
   },
-  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontWeight: '700' as const },
+  saveBtnText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold' },
 });
 
 export default AppearanceScreen;
