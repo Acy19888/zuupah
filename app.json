@@ -2,6 +2,7 @@
   "expo": {
     "name": "Zuupah",
     "slug": "zuupah-app",
+    "icon": "./src/assets/images/icon.png",
     "fonts": [
       "./src/assets/fonts/Nunito-Regular.ttf",
       "./src/assets/fonts/Nunito-Medium.ttf",
