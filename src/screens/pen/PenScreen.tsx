@@ -17,50 +17,52 @@ import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 // ─── Pen Illustration ────────────────────────────────────────────────────────
-// Drawn with Views — matches the Zuupah smart pen design:
-// white barrel, blue accent bands, rounded cap, tapered nib
+// Pill-shaped pen: white top section (flower btn + 3 control btns) + teal bottom
 
-const PEN_BLUE = COLORS.beachBlue;
+const CAPSULE_W = 112;
+const CAPSULE_H = 268;
+const CAPSULE_R = CAPSULE_W / 2;
 
 const PenIllustration: React.FC<{ connected: boolean }> = ({ connected }) => (
   <View style={penIll.wrapper}>
-    {/* Soft glow behind pen when connected */}
+    {/* Soft glow */}
     {connected && <View style={penIll.glow} />}
 
-    {/* ── Pen body (vertical) ── */}
-    <View style={penIll.pen}>
+    {/* Drop shadow wrapper */}
+    <View style={penIll.shadow}>
+      {/* Pill capsule — overflow hidden clips both halves into the pill shape */}
+      <View style={penIll.capsule}>
 
-      {/* Rounded cap */}
-      <View style={[penIll.cap, { backgroundColor: PEN_BLUE }]} />
+        {/* ── White top section ── */}
+        <View style={penIll.topHalf}>
+          {/* Flower button */}
+          <View style={penIll.flowerCircle}>
+            <Text style={penIll.flowerEmoji}>🌸</Text>
+          </View>
 
-      {/* Clip (offset to the right) */}
-      <View style={penIll.clipOuter}>
-        <View style={[penIll.clip, { backgroundColor: PEN_BLUE }]} />
-      </View>
+          {/* Row 1: Power + Volume Up */}
+          <View style={penIll.btnRow}>
+            <View style={[penIll.btn, { backgroundColor: '#EF4E30' }]}>
+              <Icon name="power" size={17} color="#fff" />
+            </View>
+            <View style={[penIll.btn, { backgroundColor: '#F97316' }]}>
+              <Text style={penIll.btnLabel}>+</Text>
+            </View>
+          </View>
 
-      {/* Top accent band */}
-      <View style={[penIll.topBand, { backgroundColor: PEN_BLUE }]} />
+          {/* Row 2: Volume Down (centered) */}
+          <View style={[penIll.btn, { backgroundColor: '#EAB308' }]}>
+            <Text style={penIll.btnLabel}>−</Text>
+          </View>
+        </View>
 
-      {/* Main white barrel */}
-      <View style={[penIll.barrel, { backgroundColor: '#FFFFFF', borderColor: '#D6E8F5' }]}>
-        <Text style={[penIll.brandZ, { color: PEN_BLUE }]}>Z</Text>
-      </View>
-
-      {/* Bottom accent band */}
-      <View style={[penIll.bottomBand, { backgroundColor: PEN_BLUE + 'CC' }]} />
-
-      {/* Shoulder taper */}
-      <View style={[penIll.shoulder, { backgroundColor: '#CBE2F3' }]} />
-
-      {/* Nib */}
-      <View style={penIll.nibWrap}>
-        <View style={[penIll.nib, { backgroundColor: '#9AC0D8' }]} />
-        <View style={penIll.nibTip} />
+        {/* ── Teal bottom section ── */}
+        <View style={[penIll.bottomHalf, { backgroundColor: COLORS.beachBlue }]} />
       </View>
     </View>
 
-    {/* Connection status pill */}
-    <View style={[penIll.statusPill, { backgroundColor: connected ? COLORS.success + '18' : '#F3F4F6' }]}>
+    {/* Status pill */}
+    <View style={[penIll.statusPill, { backgroundColor: connected ? COLORS.success + '1A' : '#F3F4F6' }]}>
       <View style={[penIll.statusDot, { backgroundColor: connected ? COLORS.success : '#9CA3AF' }]} />
       <Text style={[penIll.statusText, { color: connected ? COLORS.success : '#6B7280' }]}>
         {connected ? 'Connected' : 'Not connected'}
@@ -70,27 +72,34 @@ const PenIllustration: React.FC<{ connected: boolean }> = ({ connected }) => (
 );
 
 const penIll = StyleSheet.create({
-  wrapper:     { alignItems: 'center', paddingVertical: 28, position: 'relative' },
-  glow:        { position: 'absolute', width: 80, height: 220, borderRadius: 40, backgroundColor: 'rgba(65,165,205,0.14)', top: 16 },
-  pen:         { alignItems: 'center', width: 44, position: 'relative' },
-  cap:         { width: 34, height: 20, borderRadius: 10, zIndex: 2 },
-  clipOuter:   { position: 'absolute', right: 0, top: 12, zIndex: 3 },
-  clip:        { width: 7, height: 28, borderRadius: 3.5 },
-  topBand:     { width: 44, height: 12, borderRadius: 2, marginTop: 0 },
-  barrel:      { width: 40, height: 114, borderRadius: 6, borderWidth: 1.5, justifyContent: 'center', alignItems: 'center' },
-  brandZ:      { fontSize: 30, fontFamily: 'Nunito-Bold', letterSpacing: 1 },
-  bottomBand:  { width: 44, height: 10, borderRadius: 2 },
-  shoulder:    { width: 30, height: 12, borderBottomLeftRadius: 4, borderBottomRightRadius: 4, marginTop: 1 },
-  nibWrap:     { alignItems: 'center' },
-  nib:         { width: 16, height: 16, borderBottomLeftRadius: 3, borderBottomRightRadius: 3 },
-  nibTip:      {
-    width: 0, height: 0,
-    borderLeftWidth: 8, borderRightWidth: 8, borderTopWidth: 11,
-    borderLeftColor: 'transparent', borderRightColor: 'transparent', borderTopColor: '#9AC0D8',
+  wrapper:      { alignItems: 'center', paddingVertical: 24 },
+  glow:         { position: 'absolute', width: 120, height: 280, borderRadius: 60, backgroundColor: 'rgba(30,175,200,0.13)', top: 12 },
+  shadow:       {
+    shadowColor: '#1EAFC8', shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.22, shadowRadius: 18, elevation: 10,
   },
-  statusPill:  { flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 6, marginTop: 20 },
-  statusDot:   { width: 8, height: 8, borderRadius: 4 },
-  statusText:  { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold' },
+  capsule:      { width: CAPSULE_W, height: CAPSULE_H, borderRadius: CAPSULE_R, overflow: 'hidden' },
+  topHalf:      {
+    height: Math.round(CAPSULE_H * 0.595),
+    backgroundColor: '#F5F8FA',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingBottom: 6,
+  },
+  bottomHalf:   { flex: 1 },
+  flowerCircle: {
+    width: 46, height: 46, borderRadius: 23,
+    backgroundColor: '#E4E6EB',
+    justifyContent: 'center', alignItems: 'center',
+  },
+  flowerEmoji:  { fontSize: 22 },
+  btnRow:       { flexDirection: 'row', gap: 10 },
+  btn:          { width: 42, height: 42, borderRadius: 21, justifyContent: 'center', alignItems: 'center' },
+  btnLabel:     { color: '#fff', fontSize: 22, fontFamily: 'Nunito-Bold', lineHeight: 28 },
+  statusPill:   { flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 6, marginTop: 18 },
+  statusDot:    { width: 8, height: 8, borderRadius: 4 },
+  statusText:   { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold' },
 });
 
 // ─── Battery Bar ─────────────────────────────────────────────────────────────
