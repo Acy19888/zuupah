@@ -95,20 +95,6 @@ const FAQ_CATEGORIES = [
       },
     ],
   },
-  {
-    category: '💳 Billing',
-    icon: 'credit-card-outline',
-    items: [
-      {
-        q: 'How do I cancel my subscription?',
-        a: 'Subscriptions are managed through the App Store (iOS) or Google Play (Android). Go to your device Settings → Subscriptions → Zuupah and tap Cancel Subscription.',
-      },
-      {
-        q: 'Can I get a refund?',
-        a: 'Refund requests are handled by Apple or Google depending on where you made your purchase. For in-app purchase issues, please contact support@zuupah.com and we will assist you.',
-      },
-    ],
-  },
 ];
 
 // ── Sub-components ────────────────────────────────────────────────────────────

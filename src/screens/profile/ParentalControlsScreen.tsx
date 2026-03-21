@@ -12,7 +12,7 @@ import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 type AgeGroup  = '2-3' | '4-5' | '6-7' | 'all';
-type ScreenTime = '30' | '60' | '90' | '120' | 'unlimited';
+type ReadingTime = '30' | '60' | '90' | '120' | 'unlimited';
 
 const AGE_GROUPS = [
   { value: '2-3' as AgeGroup, label: 'Ages 2–3', desc: 'Toddler basics',  icon: 'baby-face' },
@@ -21,20 +21,19 @@ const AGE_GROUPS = [
   { value: 'all' as AgeGroup, label: 'All Ages',  desc: 'No age filter',   icon: 'account-group' },
 ];
 
-const SCREEN_TIME_OPTIONS = [
-  { value: '30' as ScreenTime, label: '30 min' },
-  { value: '60' as ScreenTime, label: '1 hour' },
-  { value: '90' as ScreenTime, label: '1.5 hrs' },
-  { value: '120' as ScreenTime, label: '2 hours' },
-  { value: 'unlimited' as ScreenTime, label: 'No limit' },
+const READING_TIME_OPTIONS = [
+  { value: '30' as ReadingTime, label: '30 min' },
+  { value: '60' as ReadingTime, label: '1 hour' },
+  { value: '90' as ReadingTime, label: '1.5 hrs' },
+  { value: '120' as ReadingTime, label: '2 hours' },
+  { value: 'unlimited' as ReadingTime, label: 'No limit' },
 ];
 
 const ParentalControlsScreen: React.FC<any> = ({ navigation }) => {
   const { tc } = useAppTheme();
-  const [ageGroup, setAgeGroup]               = useState<AgeGroup>('all');
-  const [screenTime, setScreenTime]           = useState<ScreenTime>('unlimited');
-  const [requireApproval, setRequireApproval] = useState(false);
-  const [bedtimeEnabled, setBedtimeEnabled]   = useState(false);
+  const [ageGroup, setAgeGroup]             = useState<AgeGroup>('all');
+  const [readingTime, setReadingTime]       = useState<ReadingTime>('unlimited');
+  const [bedtimeEnabled, setBedtimeEnabled] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -78,21 +77,21 @@ const ParentalControlsScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Screen Time */}
+        {/* Reading Time */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>DAILY SCREEN TIME LIMIT</Text>
+          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>DAILY READING TIME LIMIT</Text>
           <View style={styles.chipRow}>
-            {SCREEN_TIME_OPTIONS.map(opt => (
+            {READING_TIME_OPTIONS.map(opt => (
               <TouchableOpacity
                 key={opt.value}
                 style={[
                   styles.chip,
                   { borderColor: tc.border, backgroundColor: tc.card },
-                  screenTime === opt.value && { borderColor: COLORS.beachBlue, backgroundColor: COLORS.softPillowBlue },
+                  readingTime === opt.value && { borderColor: COLORS.beachBlue, backgroundColor: COLORS.softPillowBlue },
                 ]}
-                onPress={() => setScreenTime(opt.value)}
+                onPress={() => setReadingTime(opt.value)}
               >
-                <Text style={[styles.chipText, { color: tc.textSecondary }, screenTime === opt.value && { color: COLORS.beachBlue }]}>
+                <Text style={[styles.chipText, { color: tc.textSecondary }, readingTime === opt.value && { color: COLORS.beachBlue }]}>
                   {opt.label}
                 </Text>
               </TouchableOpacity>
@@ -105,7 +104,6 @@ const ParentalControlsScreen: React.FC<any> = ({ navigation }) => {
           <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>RESTRICTIONS</Text>
 
           {[
-            { icon: 'cart-check', label: 'Require Purchase Approval', desc: 'Ask parent before downloading paid books', value: requireApproval, setter: setRequireApproval },
             { icon: 'weather-night', label: 'Bedtime Restrictions', desc: 'Block app after 8:00 PM', value: bedtimeEnabled, setter: setBedtimeEnabled },
           ].map(item => (
             <View key={item.label} style={[styles.toggleRow, { backgroundColor: tc.card, borderColor: tc.border }]}>
