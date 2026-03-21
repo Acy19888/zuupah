@@ -15,6 +15,7 @@ import ProfileScreen from '@screens/profile/ProfileScreen';
 import EditProfileScreen from '@screens/profile/EditProfileScreen';
 import ChangePasswordScreen from '@screens/profile/ChangePasswordScreen';
 import AppearanceScreen from '@screens/profile/AppearanceScreen';
+import LanguageScreen from '@screens/profile/LanguageScreen';
 import ParentalControlsScreen from '@screens/profile/ParentalControlsScreen';
 import NotificationsScreen from '@screens/profile/NotificationsScreen';
 import ZuupahLogo from '@components/ZuupahLogo';
@@ -61,6 +62,7 @@ const ProfileStackNavigator: React.FC = () => (
     <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
     <ProfileStack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     <ProfileStack.Screen name="Appearance" component={AppearanceScreen} />
+    <ProfileStack.Screen name="Language" component={LanguageScreen} />
     <ProfileStack.Screen name="ParentalControls" component={ParentalControlsScreen} />
     <ProfileStack.Screen name="Notifications" component={NotificationsScreen} />
   </ProfileStack.Navigator>

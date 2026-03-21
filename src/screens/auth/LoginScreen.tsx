@@ -1,5 +1,5 @@
 /**
- * Login Screen — with Remember Me, Google Sign-In, and i18n
+ * Login Screen — email/password on top, Google at bottom, Remember Me + i18n
  */
 
 import React, { useState, useEffect } from 'react';
@@ -60,29 +60,14 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
       style={[styles.container, { backgroundColor: tc.background }]}
     >
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+
+        {/* Logo */}
         <View style={styles.header}>
           <ZuupahLogo width={180} />
           <Text style={[styles.subtitle, { color: tc.textSecondary }]}>Play. Learn. Explore.</Text>
         </View>
 
-        {/* Google Sign-In */}
-        <TouchableOpacity
-          style={[styles.googleBtn, { backgroundColor: tc.card, borderColor: tc.border }]}
-          onPress={handleGoogle}
-          disabled={isLoading}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.googleIcon}>G</Text>
-          <Text style={[styles.googleLabel, { color: tc.text }]}>{t('continueWithGoogle')}</Text>
-        </TouchableOpacity>
-
-        {/* Divider */}
-        <View style={styles.divider}>
-          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
-          <Text style={[styles.dividerText, { color: tc.textSecondary }]}>{t('orDivider')}</Text>
-          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
-        </View>
-
+        {/* Email + Password form */}
         <View style={styles.form}>
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: tc.text }]}>{t('email')}</Text>
@@ -120,11 +105,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
 
           {/* Remember Me + Forgot Password row */}
           <View style={styles.rememberRow}>
-            <TouchableOpacity
-              style={styles.rememberMeRow}
-              onPress={() => setRememberMe(!rememberMe)}
-              activeOpacity={0.7}
-            >
+            <TouchableOpacity style={styles.rememberMeRow} onPress={() => setRememberMe(!rememberMe)} activeOpacity={0.7}>
               <View style={[styles.checkbox, { borderColor: tc.border, backgroundColor: tc.inputBg }, rememberMe && styles.checkboxChecked]}>
                 {rememberMe && <Text style={styles.checkmark}>✓</Text>}
               </View>
@@ -141,6 +122,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
             </View>
           )}
 
+          {/* Sign In button */}
           <Button
             title={t('signIn')}
             onPress={handleLogin}
@@ -150,12 +132,32 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
           />
         </View>
 
-        <View style={styles.footer}>
+        {/* Sign up link */}
+        <View style={styles.signupRow}>
           <Text style={[styles.footerText, { color: tc.textSecondary }]}>{t('noAccount')} </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.footerLink}>{t('signUp')}</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Divider */}
+        <View style={styles.divider}>
+          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
+          <Text style={[styles.dividerText, { color: tc.textSecondary }]}>{t('orDivider')}</Text>
+          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
+        </View>
+
+        {/* Google Sign-In — bottom */}
+        <TouchableOpacity
+          style={[styles.googleBtn, { backgroundColor: tc.card, borderColor: tc.border }]}
+          onPress={handleGoogle}
+          disabled={isLoading}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.googleIcon}>G</Text>
+          <Text style={[styles.googleLabel, { color: tc.text }]}>{t('continueWithGoogle')}</Text>
+        </TouchableOpacity>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -163,21 +165,9 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { flexGrow: 1, justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 40 },
-  header: { alignItems: 'center', marginBottom: 32, gap: 12 },
-  subtitle: { fontSize: TYPOGRAPHY.fontSize.base, marginTop: 4 },
-  googleBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 10, paddingVertical: 14, borderRadius: 10, borderWidth: 1.5, marginBottom: 16,
-  },
-  googleIcon: {
-    fontSize: 18, fontFamily: 'Nunito-Bold', color: '#4285F4',
-    width: 22, textAlign: 'center',
-  },
-  googleLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold' },
-  divider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 },
-  dividerLine: { flex: 1, height: 1 },
-  dividerText: { fontSize: TYPOGRAPHY.fontSize.sm },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 20, paddingVertical: 40, gap: 20 },
+  header: { alignItems: 'center', gap: 12, marginBottom: 8 },
+  subtitle: { fontSize: TYPOGRAPHY.fontSize.base },
   form: { gap: 16 },
   inputGroup: { gap: 8 },
   label: { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold' },
@@ -201,13 +191,22 @@ const styles = StyleSheet.create({
   checkboxChecked: { backgroundColor: COLORS.beachBlue, borderColor: COLORS.beachBlue },
   checkmark: { color: '#fff', fontSize: 12, fontFamily: 'Nunito-Bold', lineHeight: 14 },
   rememberLabel: { fontSize: TYPOGRAPHY.fontSize.sm },
-  button: { marginTop: 4 },
   link: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold' },
+  button: { marginTop: 4 },
   errorContainer: { backgroundColor: COLORS.error, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
   errorText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-Medium' },
-  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 20 },
+  signupRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
   footerText: { fontSize: TYPOGRAPHY.fontSize.sm },
   footerLink: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.beachBlue, fontFamily: 'Nunito-Bold' },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  dividerLine: { flex: 1, height: 1 },
+  dividerText: { fontSize: TYPOGRAPHY.fontSize.sm },
+  googleBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 10, paddingVertical: 14, borderRadius: 10, borderWidth: 1.5,
+  },
+  googleIcon: { fontSize: 18, fontFamily: 'Nunito-Bold', color: '#4285F4', width: 22, textAlign: 'center' },
+  googleLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold' },
 });
 
 export default LoginScreen;

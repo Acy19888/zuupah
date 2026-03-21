@@ -89,9 +89,10 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('preferences').toUpperCase()}</Text>
               {[
-                { icon: 'bell',           label: t('notifications'),    desc: t('manageNotif'),    screen: 'Notifications' },
-                { icon: 'palette',        label: t('appearance'),        desc: t('appearanceDesc'), screen: 'Appearance' },
-                { icon: 'shield-account', label: t('parentalControls'), desc: t('parentalDesc'),   screen: 'ParentalControls' },
+                { icon: 'bell',           label: t('notifications'),    desc: t('manageNotif'),       screen: 'Notifications' },
+                { icon: 'palette',        label: t('appearance'),        desc: t('appearanceDesc'),    screen: 'Appearance' },
+                { icon: 'translate',      label: t('language'),          desc: t('languageDesc'),      screen: 'Language' },
+                { icon: 'shield-account', label: t('parentalControls'), desc: t('parentalDesc'),      screen: 'ParentalControls' },
               ].map(item => (
                 <TouchableOpacity key={item.label} style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]} onPress={() => navigation.navigate(item.screen)}>
                   <View style={styles.settingContent}>
