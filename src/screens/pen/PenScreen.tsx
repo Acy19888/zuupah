@@ -5,8 +5,9 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  View, StyleSheet, ScrollView, Text, SafeAreaView, TouchableOpacity, Linking, Alert,
+  View, StyleSheet, ScrollView, Text, SafeAreaView, TouchableOpacity, Linking,
 } from 'react-native';
+import ConfirmModal from '@components/common/ConfirmModal';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useBluetooth } from '@hooks/useBluetooth';
 import { useAppTheme } from '@hooks/useAppTheme';
@@ -283,6 +284,7 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
 
   const [latestFirmware, setLatestFirmware] = useState<LatestFirmware | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showUpToDate, setShowUpToDate] = useState(false);
 
   const isConnected  = connectionStatus === PenConnectionStatus.CONNECTED;
   const isConnecting = connectionStatus === PenConnectionStatus.CONNECTING;
@@ -391,7 +393,7 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
             <View style={[styles.section, { backgroundColor: tc.card, borderColor: tc.border, gap: 0 }]}>
               <TouchableOpacity
                 style={[styles.actionRow, { borderBottomColor: tc.divider, borderBottomWidth: 1 }]}
-                onPress={() => latestFirmware ? setShowUpdateModal(true) : Alert.alert('Firmware', 'Dein Stift ist auf dem neusten Stand ✓')}
+                onPress={() => latestFirmware ? setShowUpdateModal(true) : setShowUpToDate(true)}
               >
                 <View style={[styles.actionIcon, { backgroundColor: COLORS.beachBlue + '18' }]}>
                   <Icon name="update" size={19} color={COLORS.beachBlue} />
@@ -471,6 +473,19 @@ const PenScreen: React.FC<any> = ({ navigation }) => {
 
         <View style={{ height: 32 }} />
       </ScrollView>
+
+      {/* Up to date modal */}
+      <ConfirmModal
+        visible={showUpToDate}
+        icon="check-circle-outline"
+        iconColor="#22c55e"
+        title="Firmware aktuell"
+        message="Dein Stift ist auf dem neusten Stand ✓"
+        confirmLabel="OK"
+        infoOnly
+        onConfirm={() => setShowUpToDate(false)}
+        onCancel={() => setShowUpToDate(false)}
+      />
 
       {/* Firmware Update Modal */}
       {showUpdateModal && latestFirmware && (

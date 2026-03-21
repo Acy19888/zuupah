@@ -22,6 +22,7 @@ interface Props {
   confirmLabel?: string;
   cancelLabel?: string;
   destructive?: boolean;
+  infoOnly?: boolean;   // hides cancel button, shows single OK button
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -35,6 +36,7 @@ const ConfirmModal: React.FC<Props> = ({
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
   destructive = false,
+  infoOnly = false,
   onConfirm,
   onCancel,
 }) => {
@@ -72,14 +74,15 @@ const ConfirmModal: React.FC<Props> = ({
 
           {/* Buttons */}
           <View style={styles.buttons}>
-            <TouchableOpacity
-              style={[styles.btn, styles.cancelBtn, { borderColor: tc.border, backgroundColor: tc.surface }]}
-              onPress={onCancel}
-              activeOpacity={0.75}
-            >
-              <Text style={[styles.btnText, { color: tc.textSecondary }]}>{cancelLabel}</Text>
-            </TouchableOpacity>
-
+            {!infoOnly && (
+              <TouchableOpacity
+                style={[styles.btn, styles.cancelBtn, { borderColor: tc.border, backgroundColor: tc.surface }]}
+                onPress={onCancel}
+                activeOpacity={0.75}
+              >
+                <Text style={[styles.btnText, { color: tc.textSecondary }]}>{cancelLabel}</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={[styles.btn, styles.confirmBtn, { backgroundColor: confirmColor }]}
               onPress={onConfirm}
