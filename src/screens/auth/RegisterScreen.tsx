@@ -1,5 +1,5 @@
 /**
- * Register Screen
+ * Register Screen — with Google Sign-In and i18n
  */
 
 import React, { useState } from 'react';
@@ -9,22 +9,24 @@ import {
 } from 'react-native';
 import { useAuth } from '@hooks/useAuth';
 import { useAppTheme } from '@hooks/useAppTheme';
+import { useI18n } from '@hooks/useI18n';
 import Button from '@components/common/Button';
 import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 const RegisterScreen: React.FC<any> = ({ navigation }) => {
-  const [firstName, setFirstName]       = useState('');
-  const [lastName, setLastName]         = useState('');
-  const [childName, setChildName]       = useState('');
-  const [email, setEmail]               = useState('');
-  const [password, setPassword]         = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [acceptTerms, setAcceptTerms]   = useState(false);
+  const [firstName, setFirstName]         = useState('');
+  const [lastName, setLastName]           = useState('');
+  const [childName, setChildName]         = useState('');
+  const [email, setEmail]                 = useState('');
+  const [password, setPassword]           = useState('');
+  const [showPassword, setShowPassword]   = useState(false);
+  const [acceptTerms, setAcceptTerms]     = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
-  const { handleSignUp, isLoading, error, clearError } = useAuth();
+  const { handleSignUp, handleGoogleSignIn, isLoading, error, clearError } = useAuth();
   const { tc } = useAppTheme();
+  const { t } = useI18n();
 
   const canRegister = firstName && lastName && email && password && acceptTerms && acceptPrivacy;
 
@@ -37,6 +39,11 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
     } catch (err) { console.error('Register error:', err); }
   };
 
+  const handleGoogle = async () => {
+    try { clearError(); await handleGoogleSignIn(); }
+    catch (err) { console.error('Google register error:', err); }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -45,17 +52,35 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backButton}>← Back</Text>
+            <Text style={styles.backButton}>{t('back')}</Text>
           </TouchableOpacity>
           <View style={styles.logoRow}><ZuupahLogo width={140} /></View>
-          <Text style={[styles.title, { color: tc.text }]}>Create Account</Text>
+          <Text style={[styles.title, { color: tc.text }]}>{t('createAccount')}</Text>
           <Text style={[styles.subtitle, { color: tc.textSecondary }]}>Join Zuupah Today</Text>
+        </View>
+
+        {/* Google Sign-In */}
+        <TouchableOpacity
+          style={[styles.googleBtn, { backgroundColor: tc.card, borderColor: tc.border }]}
+          onPress={handleGoogle}
+          disabled={isLoading}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.googleIcon}>G</Text>
+          <Text style={[styles.googleLabel, { color: tc.text }]}>{t('continueWithGoogle')}</Text>
+        </TouchableOpacity>
+
+        {/* Divider */}
+        <View style={styles.divider}>
+          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
+          <Text style={[styles.dividerText, { color: tc.textSecondary }]}>{t('orDivider')}</Text>
+          <View style={[styles.dividerLine, { backgroundColor: tc.border }]} />
         </View>
 
         <View style={styles.form}>
           <View style={styles.rowGroup}>
             <View style={[styles.inputGroup, { flex: 1 }]}>
-              <Text style={[styles.label, { color: tc.text }]}>First Name *</Text>
+              <Text style={[styles.label, { color: tc.text }]}>{t('firstName')} *</Text>
               <TextInput
                 style={[styles.input, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder, color: tc.inputText }]}
                 placeholder="John" placeholderTextColor={tc.textDisabled}
@@ -64,7 +89,7 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
               />
             </View>
             <View style={[styles.inputGroup, { flex: 1 }]}>
-              <Text style={[styles.label, { color: tc.text }]}>Last Name *</Text>
+              <Text style={[styles.label, { color: tc.text }]}>{t('lastName')} *</Text>
               <TextInput
                 style={[styles.input, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder, color: tc.inputText }]}
                 placeholder="Doe" placeholderTextColor={tc.textDisabled}
@@ -75,18 +100,20 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={[styles.label, { color: tc.text }]}>Child's Name <Text style={[styles.optional, { color: tc.textSecondary }]}>(optional)</Text></Text>
+            <Text style={[styles.label, { color: tc.text }]}>
+              {t('childName')} <Text style={[styles.optional, { color: tc.textSecondary }]}>({t('optional')})</Text>
+            </Text>
             <TextInput
               style={[styles.input, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder, color: tc.inputText }]}
               placeholder="Emma" placeholderTextColor={tc.textDisabled}
               value={childName} onChangeText={setChildName}
               editable={!isLoading} autoCapitalize="words"
             />
-            <Text style={[styles.hint, { color: tc.textSecondary }]}>Your child's name shown in the app</Text>
+            <Text style={[styles.hint, { color: tc.textSecondary }]}>{t('childNameHint')}</Text>
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={[styles.label, { color: tc.text }]}>Email *</Text>
+            <Text style={[styles.label, { color: tc.text }]}>{t('email')} *</Text>
             <TextInput
               style={[styles.input, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder, color: tc.inputText }]}
               placeholder="your@email.com" placeholderTextColor={tc.textDisabled}
@@ -96,7 +123,7 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={[styles.label, { color: tc.text }]}>Password *</Text>
+            <Text style={[styles.label, { color: tc.text }]}>{t('password')} *</Text>
             <View style={[styles.passwordContainer, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder }]}>
               <TextInput
                 style={[styles.passwordInput, { color: tc.inputText }]}
@@ -108,7 +135,7 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
                 <Text style={styles.showButtonText}>{showPassword ? 'Hide' : 'Show'}</Text>
               </TouchableOpacity>
             </View>
-            <Text style={[styles.hint, { color: tc.textSecondary }]}>At least 6 characters</Text>
+            <Text style={[styles.hint, { color: tc.textSecondary }]}>{t('atLeast6')}</Text>
           </View>
 
           {error && (
@@ -122,27 +149,27 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
               <View style={[styles.checkboxBox, { borderColor: tc.border, backgroundColor: tc.inputBg }, acceptTerms && styles.checkboxChecked]}>
                 {acceptTerms && <Text style={styles.checkboxTick}>✓</Text>}
               </View>
-              <Text style={[styles.checkboxLabel, { color: tc.text }]}>I accept the Terms of Service</Text>
+              <Text style={[styles.checkboxLabel, { color: tc.text }]}>{t('acceptTerms')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.checkbox} onPress={() => !isLoading && setAcceptPrivacy(!acceptPrivacy)} activeOpacity={0.7}>
               <View style={[styles.checkboxBox, { borderColor: tc.border, backgroundColor: tc.inputBg }, acceptPrivacy && styles.checkboxChecked]}>
                 {acceptPrivacy && <Text style={styles.checkboxTick}>✓</Text>}
               </View>
-              <Text style={[styles.checkboxLabel, { color: tc.text }]}>I accept the Privacy Policy</Text>
+              <Text style={[styles.checkboxLabel, { color: tc.text }]}>{t('acceptPrivacy')}</Text>
             </TouchableOpacity>
           </View>
 
           <Button
-            title="Create Account" onPress={handleRegister}
+            title={t('createAccount')} onPress={handleRegister}
             isLoading={isLoading} disabled={!canRegister || isLoading}
             fullWidth size="large" style={styles.button}
           />
         </View>
 
         <View style={styles.footer}>
-          <Text style={[styles.footerText, { color: tc.textSecondary }]}>Already have an account? </Text>
+          <Text style={[styles.footerText, { color: tc.textSecondary }]}>{t('hasAccount')} </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.footerLink}>Sign In</Text>
+            <Text style={styles.footerLink}>{t('signIn')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -153,11 +180,20 @@ const RegisterScreen: React.FC<any> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { flexGrow: 1, justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 40 },
-  header: { marginBottom: 40 },
+  header: { marginBottom: 24 },
   logoRow: { alignItems: 'center', marginBottom: 16, marginTop: 8 },
   backButton: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold', marginBottom: 16 },
   title: { fontSize: TYPOGRAPHY.fontSize['3xl'], fontFamily: 'Nunito-Bold', marginBottom: 4 },
   subtitle: { fontSize: TYPOGRAPHY.fontSize.base },
+  googleBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 10, paddingVertical: 14, borderRadius: 10, borderWidth: 1.5, marginBottom: 16,
+  },
+  googleIcon: { fontSize: 18, fontFamily: 'Nunito-Bold', color: '#4285F4', width: 22, textAlign: 'center' },
+  googleLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold' },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 },
+  dividerLine: { flex: 1, height: 1 },
+  dividerText: { fontSize: TYPOGRAPHY.fontSize.sm },
   form: { gap: 16 },
   rowGroup: { flexDirection: 'row', gap: 12 },
   inputGroup: { gap: 8 },

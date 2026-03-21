@@ -14,6 +14,7 @@ export const useAuth = () => {
     error,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     forgotPassword,
     resetPassword,
@@ -45,6 +46,14 @@ export const useAuth = () => {
     },
     [signIn]
   );
+
+  const handleGoogleSignIn = useCallback(async () => {
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      console.error('Google sign in failed:', err);
+    }
+  }, [signInWithGoogle]);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -102,6 +111,7 @@ export const useAuth = () => {
     error,
     handleSignUp,
     handleSignIn,
+    handleGoogleSignIn,
     handleSignOut,
     handleForgotPassword,
     handleResetPassword,

@@ -11,6 +11,7 @@ interface AuthStore extends AuthState {
   // Actions
   signUp: (email: string, password: string, displayName: string, firstName?: string, lastName?: string, childName?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -28,180 +29,110 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   error: null,
   lastAuthTime: undefined,
 
-  signUp: async (email: string, password: string, displayName: string, firstName?: string, lastName?: string, childName?: string) => {
+  signUp: async (email, password, displayName, firstName, lastName, childName) => {
     set({ isLoading: true, error: null });
-
     try {
-      const user = await authService.signUp({
-        email,
-        password,
-        displayName,
-        firstName,
-        lastName,
-        childName,
-        acceptTerms: true,
-        acceptPrivacy: true,
-      });
-
-      set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
-        lastAuthTime: Date.now(),
-      });
+      const user = await authService.signUp({ email, password, displayName, firstName, lastName, childName, acceptTerms: true, acceptPrivacy: true });
+      set({ user, isAuthenticated: true, isLoading: false, lastAuthTime: Date.now() });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
-  signIn: async (email: string, password: string) => {
+  signIn: async (email, password) => {
     set({ isLoading: true, error: null });
-
     try {
-      const user = await authService.signIn({
-        email,
-        password,
-      });
-
-      set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
-        lastAuthTime: Date.now(),
-      });
+      const user = await authService.signIn({ email, password });
+      set({ user, isAuthenticated: true, isLoading: false, lastAuthTime: Date.now() });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  signInWithGoogle: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await authService.signInWithGoogle();
+      set({ user, isAuthenticated: true, isLoading: false, lastAuthTime: Date.now() });
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
   signOut: async () => {
     set({ isLoading: true, error: null });
-
     try {
       await authService.signOut();
-
-      set({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
+      set({ user: null, isAuthenticated: false, isLoading: false });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
-  forgotPassword: async (email: string) => {
+  forgotPassword: async (email) => {
     set({ isLoading: true, error: null });
-
     try {
       await authService.sendPasswordResetEmail(email);
       set({ isLoading: false });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
-  resetPassword: async (token: string, newPassword: string) => {
+  resetPassword: async (token, newPassword) => {
     set({ isLoading: true, error: null });
-
     try {
-      await authService.confirmPasswordReset({
-        token,
-        newPassword,
-      });
-
+      await authService.confirmPasswordReset({ token, newPassword });
       set({ isLoading: false });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
   updateProfile: async (updates) => {
     set({ isLoading: true, error: null });
-
     try {
       await authService.updateUserProfile(updates);
-
       const currentUser = get().user;
       if (currentUser) {
-        set({
-          user: {
-            ...currentUser,
-            ...updates,
-          },
-          isLoading: false,
-        });
+        set({ user: { ...currentUser, ...updates }, isLoading: false });
       }
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
   sendEmailVerification: async () => {
     set({ isLoading: true, error: null });
-
     try {
       await authService.sendEmailVerification();
       set({ isLoading: false });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
       throw error;
     }
   },
 
+  // On startup: try to restore a persisted session from AsyncStorage
   checkAuthStatus: async () => {
     set({ isLoading: true });
-
     try {
-      const user = authService.getCurrentAuthUser();
-
-      set({
-        user,
-        isAuthenticated: !!user,
-        isLoading: false,
-      });
+      const user = await authService.restoreSession();
+      set({ user, isAuthenticated: !!user, isLoading: false });
     } catch (error: any) {
-      set({
-        error: error.message,
-        isLoading: false,
-      });
+      set({ error: error.message, isLoading: false });
     }
   },
 
-  setError: (error: string | null) => {
-    set({ error });
-  },
-
-  clearError: () => {
-    set({ error: null });
-  },
+  setError: (error) => set({ error }),
+  clearError: () => set({ error: null }),
 }));
 
 export default useAuthStore;

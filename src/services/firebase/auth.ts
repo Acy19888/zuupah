@@ -1,20 +1,75 @@
 /**
- * Auth Service — In-memory mock for Expo Go testing
+ * Auth Service — Mock with AsyncStorage persistence
  *
- * No native modules, no firebase/auth dependency.
- * Accepts any valid email + password (min 6 chars).
+ * Uses @react-native-async-storage/async-storage to persist the session
+ * across app restarts. Run `npx expo install @react-native-async-storage/async-storage`
+ * if not yet installed.
+ *
  * Replace this file with real Firebase Auth when building with EAS.
  */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User, AuthCredentials, SignUpData, PasswordResetPayload } from '@types/user';
+
+const SESSION_KEY   = '@zuupah_session';
+const REMEMBER_KEY  = '@zuupah_remember';
 
 // ── In-memory state ──────────────────────────────────────────────────────────
 let _currentUser: User | null = null;
 const _listeners: Array<(user: User | null) => void> = [];
 
 const notify = (user: User | null) => _listeners.forEach(fn => fn(user));
-const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+const delay  = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
-// ── Auth actions ─────────────────────────────────────────────────────────────
+// ── Session persistence ───────────────────────────────────────────────────────
+
+const saveSession = async (user: User | null) => {
+  try {
+    if (user) {
+      await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    } else {
+      await AsyncStorage.removeItem(SESSION_KEY);
+    }
+  } catch (_) { /* ignore storage errors */ }
+};
+
+export const restoreSession = async (): Promise<User | null> => {
+  try {
+    const raw = await AsyncStorage.getItem(SESSION_KEY);
+    if (raw) {
+      const user: User = JSON.parse(raw);
+      _currentUser = user;
+      notify(user);
+      return user;
+    }
+  } catch (_) { /* ignore */ }
+  return null;
+};
+
+// ── Remember Me ───────────────────────────────────────────────────────────────
+
+export interface RememberedCredentials {
+  email: string;
+  password: string;
+}
+
+export const saveRememberedCredentials = async (email: string, password: string) => {
+  try {
+    await AsyncStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
+  } catch (_) {}
+};
+
+export const clearRememberedCredentials = async () => {
+  try { await AsyncStorage.removeItem(REMEMBER_KEY); } catch (_) {}
+};
+
+export const getRememberedCredentials = async (): Promise<RememberedCredentials | null> => {
+  try {
+    const raw = await AsyncStorage.getItem(REMEMBER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+};
+
+// ── Auth actions ──────────────────────────────────────────────────────────────
 
 export const signUp = async (data: SignUpData): Promise<User> => {
   await delay(700);
@@ -35,6 +90,7 @@ export const signUp = async (data: SignUpData): Promise<User> => {
   };
   _currentUser = user;
   notify(user);
+  await saveSession(user);
   return user;
 };
 
@@ -53,6 +109,28 @@ export const signIn = async (credentials: AuthCredentials): Promise<User> => {
   };
   _currentUser = user;
   notify(user);
+  await saveSession(user);
+  return user;
+};
+
+export const signInWithGoogle = async (): Promise<User> => {
+  await delay(800);
+  // Mock Google Sign-In — replace with real expo-auth-session + Google OAuth when ready
+  const mockEmail = `google.user.${Date.now()}@gmail.com`;
+  const user: User = {
+    uid: `google-${Date.now()}`,
+    email: mockEmail,
+    displayName: 'Google User',
+    firstName: 'Google',
+    lastName: 'User',
+    photoUrl: 'https://lh3.googleusercontent.com/a/default',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isEmailVerified: true,
+  };
+  _currentUser = user;
+  notify(user);
+  await saveSession(user);
   return user;
 };
 
@@ -60,6 +138,8 @@ export const signOut = async (): Promise<void> => {
   await delay(300);
   _currentUser = null;
   notify(null);
+  await saveSession(null);
+  await clearRememberedCredentials();
 };
 
 export const sendPasswordResetEmail = async (email: string): Promise<void> => {
@@ -95,6 +175,7 @@ export const updateUserProfile = async (updates: {
       updatedAt: new Date().toISOString(),
     };
     notify(_currentUser);
+    await saveSession(_currentUser);
   }
 };
 
@@ -119,6 +200,7 @@ export const onAuthStateChanged = (listener: (user: User | null) => void): (() =
 export default {
   signUp,
   signIn,
+  signInWithGoogle,
   signOut,
   sendPasswordResetEmail,
   confirmPasswordReset,
@@ -127,4 +209,8 @@ export default {
   getCurrentAuthUser,
   isAuthenticated,
   onAuthStateChanged,
+  restoreSession,
+  getRememberedCredentials,
+  saveRememberedCredentials,
+  clearRememberedCredentials,
 };

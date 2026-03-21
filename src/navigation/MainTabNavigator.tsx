@@ -1,5 +1,5 @@
 /**
- * Main Tab Navigator — dark/light aware
+ * Main Tab Navigator — dark/light aware + i18n tab labels
  */
 import React from 'react';
 import { View } from 'react-native';
@@ -19,6 +19,7 @@ import ParentalControlsScreen from '@screens/profile/ParentalControlsScreen';
 import NotificationsScreen from '@screens/profile/NotificationsScreen';
 import ZuupahLogo from '@components/ZuupahLogo';
 import { useAppTheme } from '@hooks/useAppTheme';
+import { useI18n } from '@hooks/useI18n';
 import { COLORS } from '@constants/colors';
 
 const HeaderLogo: React.FC = () => (
@@ -66,7 +67,8 @@ const ProfileStackNavigator: React.FC = () => (
 );
 
 const MainTabNavigator: React.FC = () => {
-  const { tc, isDark } = useAppTheme();
+  const { tc } = useAppTheme();
+  const { t } = useI18n();
 
   return (
     <Tab.Navigator
@@ -86,13 +88,13 @@ const MainTabNavigator: React.FC = () => {
       }}
     >
       <Tab.Screen name="Store" component={StoreStackNavigator}
-        options={{ tabBarLabel: 'Store',   tabBarIcon: ({ color, size }) => <Icon name="store"     color={color} size={size} /> }} />
+        options={{ tabBarLabel: t('store'),   tabBarIcon: ({ color, size }) => <Icon name="store"     color={color} size={size} /> }} />
       <Tab.Screen name="Library" component={LibraryStackNavigator}
-        options={{ tabBarLabel: 'Library', tabBarIcon: ({ color, size }) => <Icon name="library"   color={color} size={size} /> }} />
+        options={{ tabBarLabel: t('library'), tabBarIcon: ({ color, size }) => <Icon name="library"   color={color} size={size} /> }} />
       <Tab.Screen name="Pen" component={PenStackNavigator}
-        options={{ tabBarLabel: 'Pen',     tabBarIcon: ({ color, size }) => <Icon name="bluetooth" color={color} size={size} /> }} />
+        options={{ tabBarLabel: t('pen'),     tabBarIcon: ({ color, size }) => <Icon name="bluetooth" color={color} size={size} /> }} />
       <Tab.Screen name="Profile" component={ProfileStackNavigator}
-        options={{ tabBarLabel: 'Profile', tabBarIcon: ({ color, size }) => <Icon name="account"   color={color} size={size} /> }} />
+        options={{ tabBarLabel: t('profile'), tabBarIcon: ({ color, size }) => <Icon name="account"   color={color} size={size} /> }} />
     </Tab.Navigator>
   );
 };

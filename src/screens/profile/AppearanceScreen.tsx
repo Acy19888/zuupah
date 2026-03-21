@@ -1,5 +1,5 @@
 /**
- * Appearance Screen
+ * Appearance Screen — theme, text size, and language
  */
 import React from 'react';
 import {
@@ -8,26 +8,32 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useThemeStore, AppTheme, TextSize } from '@store/themeStore';
+import { useLanguageStore, Language, LANGUAGE_LABELS } from '@store/languageStore';
 import { useAppTheme } from '@hooks/useAppTheme';
+import { useI18n } from '@hooks/useI18n';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 const AppearanceScreen: React.FC<any> = ({ navigation }) => {
   const { theme, textSize, setTheme, setTextSize } = useThemeStore();
+  const { language, setLanguage } = useLanguageStore();
   const [saved, setSaved] = React.useState(false);
   const { tc } = useAppTheme();
+  const { t } = useI18n();
 
-  const themeOptions: { value: AppTheme; label: string; icon: string; desc: string }[] = [
-    { value: 'light', label: 'Light', icon: 'white-balance-sunny', desc: 'Classic bright look' },
-    { value: 'dark',  label: 'Dark',  icon: 'moon-waning-crescent', desc: 'Easy on the eyes at night' },
-    { value: 'auto',  label: 'Auto',  icon: 'brightness-auto', desc: 'Follows device setting' },
+  const themeOptions: { value: AppTheme; label: string; icon: string; descKey: 'lightDesc' | 'darkDesc' | 'autoDesc' }[] = [
+    { value: 'light', label: t('light'), icon: 'white-balance-sunny',   descKey: 'lightDesc' },
+    { value: 'dark',  label: t('dark'),  icon: 'moon-waning-crescent',  descKey: 'darkDesc'  },
+    { value: 'auto',  label: t('auto'),  icon: 'brightness-auto',       descKey: 'autoDesc'  },
   ];
 
-  const sizeOptions: { value: TextSize; label: string; size: number }[] = [
-    { value: 'small',  label: 'Small',  size: 13 },
-    { value: 'medium', label: 'Medium', size: 16 },
-    { value: 'large',  label: 'Large',  size: 20 },
+  const sizeOptions: { value: TextSize; labelKey: 'small' | 'medium' | 'large'; size: number }[] = [
+    { value: 'small',  labelKey: 'small',  size: 13 },
+    { value: 'medium', labelKey: 'medium', size: 16 },
+    { value: 'large',  labelKey: 'large',  size: 20 },
   ];
+
+  const languageOptions: Language[] = ['en', 'de', 'es', 'zh'];
 
   const handleSave = () => {
     setSaved(true);
@@ -43,14 +49,43 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Text style={styles.backText}>← Back</Text>
+            <Text style={styles.backText}>{t('back')}</Text>
           </TouchableOpacity>
-          <Text style={[styles.title, { color: tc.text }]}>Appearance</Text>
+          <Text style={[styles.title, { color: tc.text }]}>{t('appearance')}</Text>
+        </View>
+
+        {/* Language */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('language').toUpperCase()}</Text>
+          <View style={styles.langGrid}>
+            {languageOptions.map(lang => (
+              <TouchableOpacity
+                key={lang}
+                style={[
+                  styles.langBtn,
+                  { backgroundColor: tc.card, borderColor: tc.border },
+                  language === lang && styles.langBtnActive,
+                ]}
+                onPress={() => setLanguage(lang)}
+              >
+                <Text style={[
+                  styles.langLabel,
+                  { color: tc.text },
+                  language === lang && { color: COLORS.white },
+                ]}>
+                  {LANGUAGE_LABELS[lang]}
+                </Text>
+                {language === lang && (
+                  <Icon name="check" size={14} color={COLORS.white} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Theme */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>THEME</Text>
+          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('theme').toUpperCase()}</Text>
           <View style={styles.optionGrid}>
             {themeOptions.map(opt => (
               <TouchableOpacity
@@ -79,7 +114,7 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
                   { color: tc.textSecondary },
                   theme === opt.value && { color: 'rgba(255,255,255,0.8)' },
                 ]}>
-                  {opt.desc}
+                  {t(opt.descKey)}
                 </Text>
                 {theme === opt.value && (
                   <View style={styles.checkBadge}>
@@ -93,7 +128,7 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
 
         {/* Text size */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>TEXT SIZE</Text>
+          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('textSize').toUpperCase()}</Text>
           <View style={styles.sizeRow}>
             {sizeOptions.map(opt => (
               <TouchableOpacity
@@ -117,7 +152,7 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
                   { color: tc.textSecondary },
                   textSize === opt.value && { color: COLORS.beachBlue },
                 ]}>
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -126,7 +161,7 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
 
         {/* Live Preview */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>PREVIEW</Text>
+          <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>{t('preview').toUpperCase()}</Text>
           <View style={[styles.previewCard, { backgroundColor: tc.card, borderColor: tc.border }]}>
             <Text style={[
               styles.previewTitle,
@@ -147,12 +182,12 @@ const AppearanceScreen: React.FC<any> = ({ navigation }) => {
 
         {saved && (
           <View style={styles.successBanner}>
-            <Text style={styles.successText}>✓ Appearance saved!</Text>
+            <Text style={styles.successText}>{t('appearanceSaved')}</Text>
           </View>
         )}
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>Save Changes</Text>
+          <Text style={styles.saveBtnText}>{t('saveChanges')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -168,6 +203,15 @@ const styles = StyleSheet.create({
   title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold' },
   section: { gap: 12 },
   sectionTitle: { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-Bold', letterSpacing: 1 },
+  langGrid: { gap: 10 },
+  langBtn: {
+    borderRadius: 10, borderWidth: 2,
+    paddingHorizontal: 16, paddingVertical: 12,
+    flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  langBtnActive: { backgroundColor: COLORS.beachBlue, borderColor: COLORS.beachBlue },
+  langLabel: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold' },
   optionGrid: { gap: 10 },
   themeCard: {
     borderRadius: 12, borderWidth: 2,
@@ -191,10 +235,7 @@ const styles = StyleSheet.create({
   sizeBtnActive: { borderColor: COLORS.beachBlue, backgroundColor: COLORS.softPillowBlue },
   sizeBtnText: { fontFamily: 'Nunito-Bold' },
   sizeLabel: { fontSize: 11, fontFamily: 'Nunito-Medium' },
-  previewCard: {
-    borderRadius: 12, padding: 16,
-    borderWidth: 1, gap: 6,
-  },
+  previewCard: { borderRadius: 12, padding: 16, borderWidth: 1, gap: 6 },
   previewTitle: { fontFamily: 'Nunito-Bold' },
   previewBody: { lineHeight: 20 },
   successBanner: { backgroundColor: COLORS.success, borderRadius: 8, padding: 12 },

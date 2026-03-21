@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, FlatList, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, FlatList, Text, SafeAreaView, Alert } from 'react-native';
 import { useBooks } from '@hooks/useBooks';
 import { useAppTheme } from '@hooks/useAppTheme';
+import { useI18n } from '@hooks/useI18n';
 import BookCard from '@components/BookCard';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import { TYPOGRAPHY } from '@constants/typography';
@@ -14,9 +15,26 @@ import { TYPOGRAPHY } from '@constants/typography';
 const LibraryScreen: React.FC<any> = ({ navigation }) => {
   const { libraryBooks, isLoading, handleRemoveFromLibrary } = useBooks();
   const { tc } = useAppTheme();
+  const { t } = useI18n();
 
   const handleBookPress = (bookId: string) => {
     navigation.navigate('LibraryBookDetail', { bookId, fromLibrary: true });
+  };
+
+  const confirmRemove = (bookId: string, bookTitle?: string) => {
+    Alert.alert(
+      t('removingBook'),
+      t('removeConfirm'),
+      [
+        { text: t('cancel'), style: 'cancel' },
+        {
+          text: t('remove'),
+          style: 'destructive',
+          onPress: () => handleRemoveFromLibrary(bookId),
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const renderBookCard = ({ item }: any) => (
@@ -24,7 +42,7 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
       book={item}
       onPress={handleBookPress}
       isDownloaded={true}
-      onRemove={handleRemoveFromLibrary}
+      onRemove={(bookId: string) => confirmRemove(bookId, item.title)}
       compact={false}
     />
   );
@@ -32,7 +50,7 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>📚</Text>
-      <Text style={[styles.emptyTitle, { color: tc.text }]}>No Books Yet</Text>
+      <Text style={[styles.emptyTitle, { color: tc.text }]}>{t('noBooks')}</Text>
       <Text style={[styles.emptyText, { color: tc.textSecondary }]}>
         Browse the store and download books to add them to your library
       </Text>
@@ -44,7 +62,7 @@ const LibraryScreen: React.FC<any> = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: tc.background }]}>
       <View style={[styles.header, { borderBottomColor: tc.border }]}>
-        <Text style={[styles.title, { color: tc.text }]}>My Library</Text>
+        <Text style={[styles.title, { color: tc.text }]}>{t('myLibrary')}</Text>
         <Text style={[styles.subtitle, { color: tc.textSecondary }]}>
           {libraryBooks.length} book{libraryBooks.length !== 1 ? 's' : ''}
         </Text>
