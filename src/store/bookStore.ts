@@ -4,6 +4,8 @@
  */
 
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Book, BookDownload, BookLibraryItem, BookFilter } from '@types/book';
 import * as bookService from '@services/firebase/books';
 
@@ -47,7 +49,9 @@ interface BookStore {
   reset: () => void;
 }
 
-export const useBookStore = create<BookStore>((set, get) => ({
+export const useBookStore = create<BookStore>()(
+  persist(
+    (set, get) => ({
   books: [],
   libraryBooks: [],
   downloads: new Map(),
@@ -181,9 +185,9 @@ export const useBookStore = create<BookStore>((set, get) => ({
       libraryBooks: [...state.libraryBooks, libraryItem],
     }));
 
-    // Register download in backend (fire-and-forget)
-    const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
-    import('@react-native-async-storage/async-storage').then(({ default: AsyncStorage }) => {
+    // Register download in backend (fire-and-forget, skip mock IDs)
+    if (!book.id.startsWith('mock-')) {
+      const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
       AsyncStorage.getItem('@zuupah_api_token').then(token => {
         if (!token) return;
         fetch(`${API}/api/books/${book.id}/download`, {
@@ -191,7 +195,7 @@ export const useBookStore = create<BookStore>((set, get) => ({
           headers: { Authorization: `Bearer ${token}` },
         }).catch(() => {/* ignore network errors */});
       });
-    });
+    }
   },
 
   removeFromLibrary: (bookId: string) => {
@@ -319,6 +323,18 @@ export const useBookStore = create<BookStore>((set, get) => ({
       usedBooks: [],
     });
   },
-}));
+    }),
+    {
+      name: '@zuupah_library',
+      storage: createJSONStorage(() => AsyncStorage),
+      // Only persist library, ratings and used books — not transient state
+      partialize: (state) => ({
+        libraryBooks: state.libraryBooks,
+        ratedBooks:   state.ratedBooks,
+        usedBooks:    state.usedBooks,
+      }),
+    }
+  )
+);
 
 export default useBookStore;
