@@ -180,6 +180,18 @@ export const useBookStore = create<BookStore>((set, get) => ({
     set(state => ({
       libraryBooks: [...state.libraryBooks, libraryItem],
     }));
+
+    // Register download in backend (fire-and-forget)
+    const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+    import('@react-native-async-storage/async-storage').then(({ default: AsyncStorage }) => {
+      AsyncStorage.getItem('@zuupah_api_token').then(token => {
+        if (!token) return;
+        fetch(`${API}/api/books/${book.id}/download`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+        }).catch(() => {/* ignore network errors */});
+      });
+    });
   },
 
   removeFromLibrary: (bookId: string) => {
