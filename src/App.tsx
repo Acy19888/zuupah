@@ -1,28 +1,35 @@
 /**
  * Root App Component
- * Entry point for the Zuupah application
  */
-
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, ActivityIndicator, Text, useColorScheme } from 'react-native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import AppNavigator from '@navigation/AppNavigator';
 import { useAuthStore } from '@store/authStore';
+import { useThemeStore } from '@store/themeStore';
 import { initializeFirebase } from '@services/firebase/config';
 import { COLORS } from '@constants/colors';
 
-// ── Global font override ──────────────────────────────────────────────────────
-// Makes ALL <Text> components use Nunito-Regular unless overridden.
-// For bold/semibold text, add fontFamily: 'Nunito-Bold' / 'Nunito-SemiBold' etc.
-// in the individual StyleSheet definition (see src/constants/typography.ts -> nFont).
+// ── Global font default ───────────────────────────────────────────────────────
 (Text as any).defaultProps = (Text as any).defaultProps ?? {};
 (Text as any).defaultProps.style = { fontFamily: 'Nunito-Regular' };
 // ─────────────────────────────────────────────────────────────────────────────
 
 const App: React.FC = () => {
   const checkAuthStatus = useAuthStore(state => state.checkAuthStatus);
+  const { theme } = useThemeStore();
+  const deviceScheme = useColorScheme();
+
+  const isDark =
+    theme === 'dark' ||
+    (theme === 'auto' && deviceScheme === 'dark');
+
+  // Pass React Navigation a matching theme so modals, drawers etc. also go dark
+  const navTheme = isDark
+    ? { ...DarkTheme,    colors: { ...DarkTheme.colors,    background: '#0f1117', card: '#1a1f2e', border: '#334155' } }
+    : { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: '#f0f4f8', card: '#ffffff', border: '#e2e8f0' } };
 
   const [fontsLoaded] = useFonts({
     'Nunito-Regular':    require('./assets/fonts/Nunito-Regular.ttf'),
@@ -52,7 +59,7 @@ const App: React.FC = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer theme={navTheme}>
         <AppNavigator />
       </NavigationContainer>
     </GestureHandlerRootView>

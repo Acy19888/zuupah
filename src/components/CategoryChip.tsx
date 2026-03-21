@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useAppTheme } from '@hooks/useAppTheme';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
@@ -14,30 +15,22 @@ interface CategoryChipProps {
   onPress: () => void;
 }
 
-/**
- * CategoryChip Component
- * Displays a selectable category chip with highlight on selection
- */
 export const CategoryChip: React.FC<CategoryChipProps> = ({
   label,
   isSelected = false,
   onPress,
 }) => {
+  const { tc } = useAppTheme();
   return (
     <TouchableOpacity
       style={[
         styles.chip,
-        isSelected && styles.chipSelected,
+        { backgroundColor: isSelected ? COLORS.beachBlue : tc.surface, borderColor: isSelected ? COLORS.beachBlue : tc.border },
       ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text
-        style={[
-          styles.label,
-          isSelected && styles.labelSelected,
-        ]}
-      >
+      <Text style={[styles.label, { color: isSelected ? COLORS.white : tc.text }]}>
         {label}
       </Text>
     </TouchableOpacity>
@@ -49,23 +42,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: COLORS.surfaceLight,
     borderWidth: 1,
-    borderColor: COLORS.border,
     marginRight: 8,
     marginBottom: 8,
-  },
-  chipSelected: {
-    backgroundColor: COLORS.beachBlue,
-    borderColor: COLORS.beachBlue,
   },
   label: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     fontFamily: 'Nunito-Medium',
-    color: COLORS.darkText,
-  },
-  labelSelected: {
-    color: COLORS.white,
   },
 });
 

@@ -5,16 +5,12 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
+  View, StyleSheet, ScrollView, Image, Text,
+  SafeAreaView, TouchableOpacity,
 } from 'react-native';
 import { useBookStore } from '@store/bookStore';
 import { useBooks } from '@hooks/useBooks';
+import { useAppTheme } from '@hooks/useAppTheme';
 import Button from '@components/common/Button';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import * as bookService from '@services/firebase/books';
@@ -31,52 +27,39 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const { handleStartDownload, libraryBooks } = useBooks();
   const { ratedBooks, usedBooks, rateBook, markBookAsUsed } = useBookStore();
+  const { tc } = useAppTheme();
 
-  const isInLibrary = libraryBooks.some((b: any) => b.id === bookId);
+  const isInLibrary     = libraryBooks.some((b: any) => b.id === bookId);
   const showLibraryMode = fromLibrary || isInLibrary;
-  const existingRating = ratedBooks[bookId] ?? 0;
+  const existingRating  = ratedBooks[bookId] ?? 0;
   const [selectedStars, setSelectedStars] = useState(existingRating);
-  const hasBeenUsed = usedBooks.includes(bookId);
+  const hasBeenUsed     = usedBooks.includes(bookId);
   const [ratingSubmitted, setRatingSubmitted] = useState(existingRating > 0);
 
-  useEffect(() => {
-    loadBook();
-  }, [bookId]);
+  useEffect(() => { loadBook(); }, [bookId]);
 
   const loadBook = async () => {
     try {
       setLoading(true);
       const bookData = await bookService.getBookById(bookId);
       setBook(bookData);
-    } catch (error) {
-      console.error('Error loading book:', error);
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { console.error('Error loading book:', error); }
+    finally { setLoading(false); }
   };
 
-  const handleDownload = () => {
-    if (book) handleStartDownload(book.id);
-  };
-
-  const handleMarkAsUsed = () => {
-    markBookAsUsed(bookId);
-  };
-
-  const handleRating = () => {
-    if (selectedStars > 0) {
-      rateBook(bookId, selectedStars);
-      setRatingSubmitted(true);
-    }
+  const handleDownload   = () => { if (book) handleStartDownload(book.id); };
+  const handleMarkAsUsed = () => { markBookAsUsed(bookId); };
+  const handleRating     = () => {
+    if (selectedStars > 0) { rateBook(bookId, selectedStars); setRatingSubmitted(true); }
   };
 
   if (loading) return <LoadingSpinner text="Loading book..." fullScreen />;
 
   if (!book) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: tc.background }]}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Book not found</Text>
+          <Text style={[styles.errorText, { color: tc.text }]}>Book not found</Text>
           <Button title="Go Back" onPress={() => navigation.goBack()} fullWidth />
         </View>
       </SafeAreaView>
@@ -84,7 +67,7 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: tc.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -98,75 +81,71 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.content}>
-          <Image source={getBookCoverSource(book)} style={styles.cover} />
+          <Image source={getBookCoverSource(book)} style={[styles.cover, { backgroundColor: tc.surface }]} />
 
           <View style={styles.info}>
-            <Text style={styles.title}>{book.title}</Text>
-            {book.author && <Text style={styles.author}>by {book.author}</Text>}
+            <Text style={[styles.title, { color: tc.text }]}>{book.title}</Text>
+            {book.author && <Text style={[styles.author, { color: tc.textSecondary }]}>by {book.author}</Text>}
 
             <View style={styles.metadata}>
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>Age {book.ageMin}+</Text>
+                <Text style={[styles.badgeText, { color: tc.text }]}>Age {book.ageMin}+</Text>
               </View>
-              <Text style={styles.category}>{book.category}</Text>
+              <Text style={[styles.category, { color: tc.textSecondary }]}>{book.category}</Text>
               {(existingRating > 0 || ratingSubmitted) && (
-                <Text style={styles.rating}>⭐ {ratedBooks[bookId] ?? selectedStars}.0 (You)</Text>
+                <Text style={[styles.rating, { color: tc.text }]}>⭐ {ratedBooks[bookId] ?? selectedStars}.0 (You)</Text>
               )}
               {book.rating && !ratingSubmitted && (
-                <Text style={styles.rating}>⭐ {book.rating.toFixed(1)}</Text>
+                <Text style={[styles.rating, { color: tc.text }]}>⭐ {book.rating.toFixed(1)}</Text>
               )}
             </View>
 
-            <Text style={styles.description}>{book.description}</Text>
+            <Text style={[styles.description, { color: tc.textSecondary }]}>{book.description}</Text>
 
-            <View style={styles.details}>
+            <View style={[styles.details, { borderTopColor: tc.divider }]}>
               <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Language</Text>
-                <Text style={styles.detailValue}>{book.language}</Text>
+                <Text style={[styles.detailLabel, { color: tc.textSecondary }]}>Language</Text>
+                <Text style={[styles.detailValue, { color: tc.text }]}>{book.language}</Text>
               </View>
               {book.duration && (
                 <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Duration</Text>
-                  <Text style={styles.detailValue}>{Math.floor(book.duration / 60)} min</Text>
+                  <Text style={[styles.detailLabel, { color: tc.textSecondary }]}>Duration</Text>
+                  <Text style={[styles.detailValue, { color: tc.text }]}>{Math.floor(book.duration / 60)} min</Text>
                 </View>
               )}
               <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>File Size</Text>
-                <Text style={styles.detailValue}>{(book.fileSize / 1024 / 1024).toFixed(1)} MB</Text>
+                <Text style={[styles.detailLabel, { color: tc.textSecondary }]}>File Size</Text>
+                <Text style={[styles.detailValue, { color: tc.text }]}>{(book.fileSize / 1024 / 1024).toFixed(1)} MB</Text>
               </View>
             </View>
           </View>
         </View>
       </ScrollView>
 
-      {/* Footer: Library mode = rating | Store mode = download */}
       {showLibraryMode ? (
-        <View style={styles.footer}>
+        <View style={[styles.footer, { backgroundColor: tc.card, borderTopColor: tc.border }]}>
           {!hasBeenUsed ? (
-            /* Not yet used with pen → prompt to mark as used */
             <View style={styles.ratingSection}>
-              <Text style={styles.ratingHint}>
+              <Text style={[styles.ratingHint, { color: tc.textSecondary }]}>
                 🎧 Use this book with your Zuupah Pen first to unlock rating
               </Text>
-              <TouchableOpacity style={styles.markUsedBtn} onPress={handleMarkAsUsed}>
+              <TouchableOpacity style={[styles.markUsedBtn, { backgroundColor: tc.surface }]} onPress={handleMarkAsUsed}>
                 <Text style={styles.markUsedText}>Mark as Listened ✓</Text>
               </TouchableOpacity>
             </View>
           ) : ratingSubmitted ? (
-            /* Already rated */
             <View style={styles.ratingSection}>
-              <Text style={styles.ratedTitle}>Your Rating</Text>
+              <Text style={[styles.ratedTitle, { color: tc.text }]}>Your Rating</Text>
               <View style={styles.starsRow}>
                 {STARS.map(s => (
                   <Text key={s} style={[styles.star, s <= (ratedBooks[bookId] ?? selectedStars) && styles.starActive]}>★</Text>
                 ))}
               </View>
-              <Text style={styles.ratingHint}>Thanks for your review!</Text>
+              <Text style={[styles.ratingHint, { color: tc.textSecondary }]}>Thanks for your review!</Text>
             </View>
           ) : (
-            /* Used but not yet rated */
             <View style={styles.ratingSection}>
-              <Text style={styles.ratedTitle}>Rate this book</Text>
+              <Text style={[styles.ratedTitle, { color: tc.text }]}>Rate this book</Text>
               <View style={styles.starsRow}>
                 {STARS.map(s => (
                   <TouchableOpacity key={s} onPress={() => setSelectedStars(s)}>
@@ -185,7 +164,7 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
           )}
         </View>
       ) : (
-        <View style={styles.footer}>
+        <View style={[styles.footer, { backgroundColor: tc.card, borderTopColor: tc.border }]}>
           <View style={styles.priceContainer}>
             <Text style={styles.price}>
               {book.isFree ? 'Free' : `$${book.price.toFixed(2)}`}
@@ -206,7 +185,7 @@ const BookDetailScreen: React.FC<any> = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
+  container: { flex: 1 },
   header: {
     paddingHorizontal: 16, paddingVertical: 12,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -219,46 +198,38 @@ const styles = StyleSheet.create({
   },
   libraryBadgeText: { fontSize: TYPOGRAPHY.fontSize.xs, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold' },
   content: { paddingHorizontal: 16, paddingBottom: 160 },
-  cover: {
-    width: '100%', height: 300, borderRadius: 16,
-    backgroundColor: COLORS.surfaceLight, marginBottom: 24,
-  },
+  cover: { width: '100%', height: 300, borderRadius: 16, marginBottom: 24 },
   info: { gap: 12 },
-  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold', color: COLORS.darkText },
-  author: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.lightText },
+  title: { fontSize: TYPOGRAPHY.fontSize['2xl'], fontFamily: 'Nunito-Bold' },
+  author: { fontSize: TYPOGRAPHY.fontSize.base },
   metadata: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
   badge: { backgroundColor: COLORS.morningYellow, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 4 },
-  badgeText: { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold', color: COLORS.darkText },
-  category: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText },
-  rating: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold', color: COLORS.darkText },
-  description: { fontSize: TYPOGRAPHY.fontSize.base, color: COLORS.lightText, lineHeight: 22, marginTop: 8 },
-  details: { marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: COLORS.border, gap: 16 },
+  badgeText: { fontSize: TYPOGRAPHY.fontSize.xs, fontFamily: 'Nunito-SemiBold' },
+  category: { fontSize: TYPOGRAPHY.fontSize.sm },
+  rating: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-SemiBold' },
+  description: { fontSize: TYPOGRAPHY.fontSize.base, lineHeight: 22, marginTop: 8 },
+  details: { marginTop: 16, paddingTop: 16, borderTopWidth: 1, gap: 16 },
   detailItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  detailLabel: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.lightText },
-  detailValue: { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold', color: COLORS.darkText },
+  detailLabel: { fontSize: TYPOGRAPHY.fontSize.sm },
+  detailValue: { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold' },
   footer: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
-    backgroundColor: COLORS.white, paddingHorizontal: 16, paddingVertical: 12,
-    borderTopWidth: 1, borderTopColor: COLORS.border,
-    flexDirection: 'row', alignItems: 'center', gap: 12,
+    paddingHorizontal: 16, paddingVertical: 12,
+    borderTopWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 12,
   },
   priceContainer: { paddingHorizontal: 12 },
   price: { fontSize: TYPOGRAPHY.fontSize.lg, fontFamily: 'Nunito-Bold', color: COLORS.zestyOrange },
   downloadButton: { flex: 1 },
-  // Library / Rating UI
   ratingSection: { flex: 1, alignItems: 'center', gap: 8 },
-  ratedTitle: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold', color: COLORS.darkText },
+  ratedTitle: { fontSize: TYPOGRAPHY.fontSize.base, fontFamily: 'Nunito-Bold' },
   starsRow: { flexDirection: 'row', gap: 6, marginVertical: 4 },
-  star: { fontSize: 32, color: COLORS.border },
+  star: { fontSize: 32, color: '#cbd5e0' },
   starActive: { color: '#f59e0b' },
-  ratingHint: { fontSize: TYPOGRAPHY.fontSize.xs, color: COLORS.lightText, textAlign: 'center' },
-  markUsedBtn: {
-    backgroundColor: COLORS.softPillowBlue, borderRadius: 8,
-    paddingHorizontal: 20, paddingVertical: 8,
-  },
+  ratingHint: { fontSize: TYPOGRAPHY.fontSize.xs, textAlign: 'center' },
+  markUsedBtn: { borderRadius: 8, paddingHorizontal: 20, paddingVertical: 8 },
   markUsedText: { color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold', fontSize: TYPOGRAPHY.fontSize.sm },
   errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16, paddingHorizontal: 16 },
-  errorText: { fontSize: TYPOGRAPHY.fontSize.lg, color: COLORS.darkText },
+  errorText: { fontSize: TYPOGRAPHY.fontSize.lg },
 });
 
 export default BookDetailScreen;

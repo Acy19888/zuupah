@@ -1,66 +1,50 @@
 /**
  * Login Screen
- * User login with email and password
  */
 
 import React, { useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  Text,
+  View, StyleSheet, ScrollView, TextInput,
+  KeyboardAvoidingView, Platform, TouchableOpacity, Text,
 } from 'react-native';
 import { useAuth } from '@hooks/useAuth';
+import { useAppTheme } from '@hooks/useAppTheme';
 import Button from '@components/common/Button';
 import ZuupahLogo from '@components/ZuupahLogo';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
-/**
- * LoginScreen Component
- * Handles user login with email/password authentication
- */
 const LoginScreen: React.FC<any> = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail]               = useState('');
+  const [password, setPassword]         = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { handleSignIn, isLoading, error, clearError } = useAuth();
+  const { tc } = useAppTheme();
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      return;
-    }
-
-    try {
-      clearError();
-      await handleSignIn(email, password);
-    } catch (err) {
-      console.error('Login error:', err);
-    }
+    if (!email || !password) return;
+    try { clearError(); await handleSignIn(email, password); }
+    catch (err) { console.error('Login error:', err); }
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: tc.background }]}
     >
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <ZuupahLogo width={180} />
-          <Text style={styles.subtitle}>Play. Learn. Explore.</Text>
+          <Text style={[styles.subtitle, { color: tc.textSecondary }]}>Play. Learn. Explore.</Text>
         </View>
 
         <View style={styles.form}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={[styles.label, { color: tc.text }]}>Email</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder, color: tc.inputText }]}
               placeholder="your@email.com"
-              placeholderTextColor={COLORS.placeholderText}
+              placeholderTextColor={tc.textDisabled}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -70,21 +54,19 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.passwordContainer}>
+            <Text style={[styles.label, { color: tc.text }]}>Password</Text>
+            <View style={[styles.passwordContainer, { backgroundColor: tc.inputBg, borderColor: tc.inputBorder }]}>
               <TextInput
-                style={styles.passwordInput}
+                style={[styles.passwordInput, { color: tc.inputText }]}
                 placeholder="••••••••"
-                placeholderTextColor={COLORS.placeholderText}
+                placeholderTextColor={tc.textDisabled}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
                 editable={!isLoading}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Text style={styles.showButtonText}>
-                  {showPassword ? 'Hide' : 'Show'}
-                </Text>
+                <Text style={styles.showButtonText}>{showPassword ? 'Hide' : 'Show'}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -100,9 +82,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
             onPress={handleLogin}
             isLoading={isLoading}
             disabled={!email || !password || isLoading}
-            fullWidth
-            size="large"
-            style={styles.button}
+            fullWidth size="large" style={styles.button}
           />
 
           <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
@@ -111,7 +91,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={[styles.footerText, { color: tc.textSecondary }]}>Don't have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.footerLink}>Sign Up</Text>
           </TouchableOpacity>
@@ -122,104 +102,31 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 40,
-    gap: 12,
-  },
-  subtitle: {
-    fontSize: TYPOGRAPHY.fontSize.base,
-    color: COLORS.lightText,
-    marginTop: 4,
-  },
-  form: {
-    gap: 16,
-  },
-  inputGroup: {
-    gap: 8,
-  },
-  label: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    fontFamily: 'Nunito-SemiBold',
-    color: COLORS.darkText,
-  },
+  container: { flex: 1 },
+  scrollContent: { flexGrow: 1, justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 40 },
+  header: { alignItems: 'center', marginBottom: 40, gap: 12 },
+  subtitle: { fontSize: TYPOGRAPHY.fontSize.base, marginTop: 4 },
+  form: { gap: 16 },
+  inputGroup: { gap: 8 },
+  label: { fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-SemiBold' },
   input: {
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    borderWidth: 1, borderRadius: 8,
+    paddingHorizontal: 12, paddingVertical: 12,
     fontSize: TYPOGRAPHY.fontSize.base,
-    color: COLORS.darkText,
-    backgroundColor: COLORS.white,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    backgroundColor: COLORS.white,
+    flexDirection: 'row', alignItems: 'center',
+    borderWidth: 1, borderRadius: 8, paddingHorizontal: 12,
   },
-  passwordInput: {
-    flex: 1,
-    paddingVertical: 12,
-    fontSize: TYPOGRAPHY.fontSize.base,
-    color: COLORS.darkText,
-  },
-  showButtonText: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.beachBlue,
-    fontFamily: 'Nunito-SemiBold',
-    paddingLeft: 8,
-  },
-  button: {
-    marginTop: 8,
-  },
-  link: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.beachBlue,
-    fontFamily: 'Nunito-SemiBold',
-    textAlign: 'center',
-    marginTop: 12,
-  },
-  errorContainer: {
-    backgroundColor: COLORS.error,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  errorText: {
-    color: COLORS.white,
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    fontFamily: 'Nunito-Medium',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  footerText: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.lightText,
-  },
-  footerLink: {
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    color: COLORS.beachBlue,
-    fontFamily: 'Nunito-Bold',
-  },
+  passwordInput: { flex: 1, paddingVertical: 12, fontSize: TYPOGRAPHY.fontSize.base },
+  showButtonText: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold', paddingLeft: 8 },
+  button: { marginTop: 8 },
+  link: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.beachBlue, fontFamily: 'Nunito-SemiBold', textAlign: 'center', marginTop: 12 },
+  errorContainer: { backgroundColor: COLORS.error, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
+  errorText: { color: COLORS.white, fontSize: TYPOGRAPHY.fontSize.sm, fontFamily: 'Nunito-Medium' },
+  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 20 },
+  footerText: { fontSize: TYPOGRAPHY.fontSize.sm },
+  footerLink: { fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.beachBlue, fontFamily: 'Nunito-Bold' },
 });
 
 export default LoginScreen;

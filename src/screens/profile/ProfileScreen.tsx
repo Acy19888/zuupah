@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
-import { useThemeStore, getThemeColors } from '@store/themeStore';
+import { useAppTheme } from '@hooks/useAppTheme';
 import Card from '@components/common/Card';
 import Button from '@components/common/Button';
 import { COLORS } from '@constants/colors';
@@ -26,8 +26,7 @@ import { TYPOGRAPHY } from '@constants/typography';
  */
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const { user, handleSignOut } = useAuth();
-  const { theme } = useThemeStore();
-  const tc = getThemeColors(theme);
+  const { tc } = useAppTheme();
 
   const handleLogout = async () => {
     try {
@@ -81,135 +80,65 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             </Card>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Account</Text>
+              <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>Account</Text>
 
-              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('EditProfile')}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="account-edit"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Edit Profile</Text>
-                    <Text style={styles.settingDesc}>Update your information</Text>
+              {[
+                { icon: 'account-edit', label: 'Edit Profile', desc: 'Update your information', onPress: () => navigation.navigate('EditProfile') },
+                { icon: 'lock-reset',   label: 'Change Password', desc: 'Update your password', onPress: () => navigation.navigate('ChangePassword') },
+              ].map(item => (
+                <TouchableOpacity key={item.label} style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]} onPress={item.onPress}>
+                  <View style={styles.settingContent}>
+                    <Icon name={item.icon as any} size={24} color={COLORS.beachBlue} />
+                    <View style={styles.settingText}>
+                      <Text style={[styles.settingLabel, { color: tc.text }]}>{item.label}</Text>
+                      <Text style={[styles.settingDesc, { color: tc.textSecondary }]}>{item.desc}</Text>
+                    </View>
                   </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('ChangePassword')}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="lock-reset"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Change Password</Text>
-                    <Text style={styles.settingDesc}>Update your password</Text>
-                  </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
+                  <Icon name="chevron-right" size={24} color={tc.textSecondary} />
+                </TouchableOpacity>
+              ))}
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Preferences</Text>
+              <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>Preferences</Text>
 
-              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Notifications')}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="bell"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Notifications</Text>
-                    <Text style={styles.settingDesc}>Manage notifications</Text>
+              {[
+                { icon: 'bell',           label: 'Notifications',    desc: 'Manage notifications',    onPress: () => navigation.navigate('Notifications') },
+                { icon: 'palette',        label: 'Appearance',       desc: 'Light, dark, or auto',    onPress: () => navigation.navigate('Appearance') },
+                { icon: 'shield-account', label: 'Parental Controls', desc: 'Manage family settings', onPress: () => navigation.navigate('ParentalControls') },
+              ].map(item => (
+                <TouchableOpacity key={item.label} style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]} onPress={item.onPress}>
+                  <View style={styles.settingContent}>
+                    <Icon name={item.icon as any} size={24} color={COLORS.beachBlue} />
+                    <View style={styles.settingText}>
+                      <Text style={[styles.settingLabel, { color: tc.text }]}>{item.label}</Text>
+                      <Text style={[styles.settingDesc, { color: tc.textSecondary }]}>{item.desc}</Text>
+                    </View>
                   </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('Appearance')}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="palette"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Appearance</Text>
-                    <Text style={styles.settingDesc}>Light, dark, or auto</Text>
-                  </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingItem} onPress={() => navigation.navigate('ParentalControls')}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="shield-account"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Parental Controls</Text>
-                    <Text style={styles.settingDesc}>Manage family settings</Text>
-                  </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
+                  <Icon name="chevron-right" size={24} color={tc.textSecondary} />
+                </TouchableOpacity>
+              ))}
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Support</Text>
+              <Text style={[styles.sectionTitle, { color: tc.textSecondary }]}>Support</Text>
 
-              <TouchableOpacity style={styles.settingItem}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="help-circle"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Help & Support</Text>
-                    <Text style={styles.settingDesc}>FAQs and contact us</Text>
+              {[
+                { icon: 'help-circle',   label: 'Help & Support', desc: 'FAQs and contact us' },
+                { icon: 'file-document', label: 'Terms & Privacy', desc: 'Our policies' },
+                { icon: 'information',   label: 'About', desc: 'Version 0.1.0' },
+              ].map(item => (
+                <TouchableOpacity key={item.label} style={[styles.settingItem, { backgroundColor: tc.card, borderColor: tc.border }]}>
+                  <View style={styles.settingContent}>
+                    <Icon name={item.icon as any} size={24} color={COLORS.beachBlue} />
+                    <View style={styles.settingText}>
+                      <Text style={[styles.settingLabel, { color: tc.text }]}>{item.label}</Text>
+                      <Text style={[styles.settingDesc, { color: tc.textSecondary }]}>{item.desc}</Text>
+                    </View>
                   </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingItem}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="file-document"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Terms & Privacy</Text>
-                    <Text style={styles.settingDesc}>Our policies</Text>
-                  </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingItem}>
-                <View style={styles.settingContent}>
-                  <Icon
-                    name="information"
-                    size={24}
-                    color={COLORS.beachBlue}
-                  />
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>About</Text>
-                    <Text style={styles.settingDesc}>Version 0.1.0</Text>
-                  </View>
-                </View>
-                <Icon name="chevron-right" size={24} color={COLORS.lightText} />
-              </TouchableOpacity>
+                  <Icon name="chevron-right" size={24} color={tc.textSecondary} />
+                </TouchableOpacity>
+              ))}
             </View>
 
             <View style={styles.section}>
@@ -302,7 +231,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.fontSize.sm,
     fontFamily: 'Nunito-Bold',
-    color: COLORS.lightText,
     textTransform: 'uppercase',
     marginBottom: 8,
   },
@@ -312,10 +240,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 12,
-    backgroundColor: COLORS.white,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.border,
     marginBottom: 8,
   },
   settingContent: {
@@ -330,11 +256,9 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: TYPOGRAPHY.fontSize.base,
     fontFamily: 'Nunito-SemiBold',
-    color: COLORS.darkText,
   },
   settingDesc: {
     fontSize: TYPOGRAPHY.fontSize.xs,
-    color: COLORS.lightText,
     marginTop: 2,
   },
 });

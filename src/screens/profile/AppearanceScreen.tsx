@@ -7,14 +7,15 @@ import {
   SafeAreaView, TouchableOpacity,
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { useThemeStore, AppTheme, TextSize, getThemeColors } from '@store/themeStore';
+import { useThemeStore, AppTheme, TextSize } from '@store/themeStore';
+import { useAppTheme } from '@hooks/useAppTheme';
 import { COLORS } from '@constants/colors';
 import { TYPOGRAPHY } from '@constants/typography';
 
 const AppearanceScreen: React.FC<any> = ({ navigation }) => {
   const { theme, textSize, setTheme, setTextSize } = useThemeStore();
   const [saved, setSaved] = React.useState(false);
-  const tc = getThemeColors(theme);
+  const { tc } = useAppTheme();
 
   const themeOptions: { value: AppTheme; label: string; icon: string; desc: string }[] = [
     { value: 'light', label: 'Light', icon: 'white-balance-sunny', desc: 'Classic bright look' },

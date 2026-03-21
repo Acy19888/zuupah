@@ -1,8 +1,6 @@
 /**
- * Main Tab Navigator
- * Bottom tab navigation for main app screens
+ * Main Tab Navigator — dark/light aware
  */
-
 import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -20,9 +18,9 @@ import AppearanceScreen from '@screens/profile/AppearanceScreen';
 import ParentalControlsScreen from '@screens/profile/ParentalControlsScreen';
 import NotificationsScreen from '@screens/profile/NotificationsScreen';
 import ZuupahLogo from '@components/ZuupahLogo';
+import { useAppTheme } from '@hooks/useAppTheme';
 import { COLORS } from '@constants/colors';
 
-/** Logo component shown in the navigation header center */
 const HeaderLogo: React.FC = () => (
   <View style={{ paddingVertical: 4 }}>
     <ZuupahLogo width={100} />
@@ -35,7 +33,6 @@ const LibraryStack = createStackNavigator();
 const PenStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
-/** Store Stack */
 const StoreStackNavigator: React.FC = () => (
   <StoreStack.Navigator screenOptions={{ headerShown: false }}>
     <StoreStack.Screen name="StoreList" component={StoreScreen} />
@@ -43,7 +40,6 @@ const StoreStackNavigator: React.FC = () => (
   </StoreStack.Navigator>
 );
 
-/** Library Stack — has its own BookDetail so rating UI is shown */
 const LibraryStackNavigator: React.FC = () => (
   <LibraryStack.Navigator screenOptions={{ headerShown: false }}>
     <LibraryStack.Screen name="LibraryMain" component={LibraryScreen} />
@@ -51,7 +47,6 @@ const LibraryStackNavigator: React.FC = () => (
   </LibraryStack.Navigator>
 );
 
-/** Pen Stack */
 const PenStackNavigator: React.FC = () => (
   <PenStack.Navigator screenOptions={{ headerShown: false }}>
     <PenStack.Screen name="PenMain" component={PenScreen} />
@@ -59,7 +54,6 @@ const PenStackNavigator: React.FC = () => (
   </PenStack.Navigator>
 );
 
-/** Profile Stack */
 const ProfileStackNavigator: React.FC = () => (
   <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
     <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
@@ -71,58 +65,34 @@ const ProfileStackNavigator: React.FC = () => (
   </ProfileStack.Navigator>
 );
 
-/**
- * MainTabNavigator
- */
 const MainTabNavigator: React.FC = () => {
+  const { tc, isDark } = useAppTheme();
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: true,
         headerTitle: () => <HeaderLogo />,
         headerTitleAlign: 'center',
-        headerStyle: { backgroundColor: COLORS.softPillowBlue },
+        headerStyle: { backgroundColor: tc.headerBg },
         headerShadowVisible: false,
         tabBarActiveTintColor: COLORS.beachBlue,
-        tabBarInactiveTintColor: COLORS.lightText,
-        tabBarStyle: { borderTopColor: COLORS.border, backgroundColor: COLORS.white },
+        tabBarInactiveTintColor: tc.textSecondary,
+        tabBarStyle: {
+          borderTopColor: tc.border,
+          backgroundColor: tc.tabBarBg,
+        },
+        tabBarLabelStyle: { fontFamily: 'Nunito-SemiBold', fontSize: 11 },
       }}
     >
-      <Tab.Screen
-        name="Store"
-        component={StoreStackNavigator}
-        options={{
-          tabBarLabel: 'Store',
-          tabBarIcon: ({ color, size }) => <Icon name="store" color={color} size={size} />,
-        }}
-      />
-
-      <Tab.Screen
-        name="Library"
-        component={LibraryStackNavigator}
-        options={{
-          tabBarLabel: 'Library',
-          tabBarIcon: ({ color, size }) => <Icon name="library" color={color} size={size} />,
-        }}
-      />
-
-      <Tab.Screen
-        name="Pen"
-        component={PenStackNavigator}
-        options={{
-          tabBarLabel: 'Pen',
-          tabBarIcon: ({ color, size }) => <Icon name="bluetooth" color={color} size={size} />,
-        }}
-      />
-
-      <Tab.Screen
-        name="Profile"
-        component={ProfileStackNavigator}
-        options={{
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => <Icon name="account" color={color} size={size} />,
-        }}
-      />
+      <Tab.Screen name="Store" component={StoreStackNavigator}
+        options={{ tabBarLabel: 'Store',   tabBarIcon: ({ color, size }) => <Icon name="store"     color={color} size={size} /> }} />
+      <Tab.Screen name="Library" component={LibraryStackNavigator}
+        options={{ tabBarLabel: 'Library', tabBarIcon: ({ color, size }) => <Icon name="library"   color={color} size={size} /> }} />
+      <Tab.Screen name="Pen" component={PenStackNavigator}
+        options={{ tabBarLabel: 'Pen',     tabBarIcon: ({ color, size }) => <Icon name="bluetooth" color={color} size={size} /> }} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator}
+        options={{ tabBarLabel: 'Profile', tabBarIcon: ({ color, size }) => <Icon name="account"   color={color} size={size} /> }} />
     </Tab.Navigator>
   );
 };
